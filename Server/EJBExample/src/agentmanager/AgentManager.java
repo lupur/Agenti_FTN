@@ -6,4 +6,6 @@ import java.util.List;
 public interface AgentManager extends Serializable {
 
 	public List<AgentType> getAvailableAgentClasses();
+	
+	public List<AID> getRunningAgents();
 }

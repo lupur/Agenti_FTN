@@ -8,9 +8,9 @@ import messagemanager.ACLMessage;
 
 public interface Agent extends Serializable {
 	
-	String SIEBOG_MODULE = "siebog-jar";
-	String SIEBOG_EAR = "siebog-ear";
-	String SIEBOG_WAR = "siebog-war";
+	String EJB_MODULE = "EJBExample";
+	String EAR_MODULE = "WebExample";
+	String WAR_MODULE = "WebExample";
 
 	void init(AID aid, AgentInitArgs args);
 

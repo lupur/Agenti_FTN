@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import agentmanager.AID;
 import agentmanager.AgentManager;
 import agentmanager.AgentType;
 import sun.management.resources.agent;
@@ -49,7 +50,7 @@ public class AgentsController {
 		
 		List<AgentType> agents = agentManager.getAvailableAgentClasses();
 		
-		System.out.println("SIZE: " + agents.get(0).getName());
+		System.out.println("SIZE: " + agents.get(0).getEjbName());
 		return Response.ok().build();
 	}
 	
@@ -58,6 +59,11 @@ public class AgentsController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRunningAgents()
 	{
+		List<AID> aids = agentManager.getRunningAgents();
+		
+		System.out.println("AIDS: " + aids.size());
+				
+		
 		return Response.ok().build();
 	}
 	

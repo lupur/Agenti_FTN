@@ -27,13 +27,18 @@ public class AgentType implements Serializable {
 		args = null;
 	}
 
-	public String getName() {
-		return ejbName;
-	}
-	
 	public String getModule() {
 		return module;
 	}
+
+	public String getEjbName() {
+		return ejbName;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
 	
 	
 }
