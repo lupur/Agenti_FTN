@@ -18,9 +18,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import agentmanager.AID;
+import agentmanager.Agent;
 import agentmanager.AgentManager;
 import agentmanager.AgentType;
 import sun.management.resources.agent;
+import util.JNDITreeParser;
+import util.ObjectFactory;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -62,7 +65,6 @@ public class AgentsController {
 		List<AID> aids = agentManager.getRunningAgents();
 		
 		System.out.println("AIDS: " + aids.size());
-				
 		
 		return Response.ok().build();
 	}
@@ -72,15 +74,29 @@ public class AgentsController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startAgent(@PathParam("type") String type, @PathParam("name") String name)
 	{
+		AgentType agentType = agentManager.getAgentTypeByName(type);
+		agentManager.startServerAgent(agentType, name);
 		return Response.ok().build();
 	}
 	
 	@DELETE
 	@Path("/running/{aid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response stopAgent(@PathParam("aid") int agentID)
+	public Response stopAgent(@PathParam("aid") String agentID)
 	{
-		return Response.ok().build();
+		List<AID> aids = agentManager.getRunningAgents();
+		
+		for(AID aid : aids)
+		{
+			if(aid.getStr().equals(agentID))
+			{
+				agentManager.stopAgent(aid);
+				return Response.ok().build();
+			}
+		}
+		
+		return Response.serverError().build();
+		
 	}
 
 }

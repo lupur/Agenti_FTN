@@ -1,6 +1,8 @@
 package agentmanager;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import util.NodeManager;
 
@@ -18,6 +20,7 @@ public class AID implements Serializable {
 	{
 		this.name = "";
 		this.host = "";
+		this.str = "";
 		this.agType = null;
 	}
 	
@@ -48,4 +51,33 @@ public class AID implements Serializable {
 		return str;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AID other = (AID) obj;
+		return str.equals(other.str);
+	}
+	
+	@Override
+	public String toString() {
+		Map<String, Object> obj = new HashMap<String, Object>();
+		try {
+			obj.put("name", name);
+			obj.put("host", host);
+			obj.put("agType", agType);
+			obj.put("str", str);
+		} catch (Exception ex) {
+		}
+		return obj.toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		return str.hashCode();
+	}
 }

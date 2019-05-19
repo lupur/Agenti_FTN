@@ -53,6 +53,29 @@ public class JNDITreeParser {
 		return result;
 	}
 	
+	public AgentType getTypeByName(String name) throws NamingException 
+	{
+		List<AgentType> agentTypes = new ArrayList<>();
+		NamingEnumeration<NameClassPair> moduleList = context.list(EXP);
+		while(moduleList.hasMore())
+		{
+			NameClassPair ncp = moduleList.next();
+			String module = ncp.getName();
+			processModule("", module, agentTypes);
+			
+		}
+		
+		for(AgentType agType : agentTypes)
+		{
+			if(agType.getEjbName().equals(name))
+			{
+				return agType;
+			}
+		}
+		
+		return null;
+	}
+	
 	private void processModule(String parentModule, String module, List<AgentType> result) throws NamingException {
 		NamingEnumeration<NameClassPair> agentList;
 		if (parentModule.equals("")) {

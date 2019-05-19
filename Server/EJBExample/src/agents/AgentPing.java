@@ -3,6 +3,7 @@ package agents;
 import java.util.List;
 
 import javax.ejb.Remote;
+import javax.ejb.Remove;
 import javax.ejb.Stateless;
 
 import agentmanager.AID;
@@ -21,12 +22,6 @@ public class AgentPing implements Agent {
 
 	@Override
 	public void init(AID aid, AgentInitArgs args) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void stop() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -65,6 +60,22 @@ public class AgentPing implements Agent {
 	public List<ObjectField> deconstruct() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	protected void onTerminate() {
+	}
+
+	/**
+	 * Called before an agent is stopped.
+	 */
+	@Override
+	@Remove
+	public void stop() {
+		try {
+			onTerminate();
+		} catch (Exception ex) {
+			System.out.println("Error in onTerminate." + ex.toString());
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 package util;
 
-import org.infinispan.Cache;
-import org.infinispan.manager.CacheContainer;
+import java.io.IOException;
+import java.util.HashMap;
 
 import agentmanager.AID;
 import agentmanager.Agent;
@@ -9,8 +9,10 @@ import agentmanager.Agent;
 public class GlobalCache {
 	private static final String CACHE_CONTAINER = "java:jboss/infinispan/container/siebog-cache";
 	private static GlobalCache instance;
-	private CacheContainer cacheContainer;
+//	private CacheContainer cacheContainer;
 	private static final String RUNNING_AGENTS = "running-agents";
+	
+	private static HashMap<AID, Agent> runningAgents = new HashMap<>();
 
 	public static GlobalCache get() {
 		if (instance == null) {
@@ -23,14 +25,20 @@ public class GlobalCache {
 	}
 
 	private GlobalCache() {
-		cacheContainer = ObjectFactory.lookup(CACHE_CONTAINER, CacheContainer.class);
+//		cacheContainer = ObjectFactory.lookup(CACHE_CONTAINER, CacheContainer.class);
+		
 	}
 
-	public Cache<AID, Agent> getRunningAgents() {
-		return cacheContainer.getCache(RUNNING_AGENTS);
-	}
+	public HashMap<AID, Agent> getRunningAgents() {
 
-	public Cache<?, ?> getCache(String name) {
-		return cacheContainer.getCache(name);
+		return runningAgents;
 	}
+//	public Cache<AID, Agent> getRunningAgents() {
+//
+//		return cacheContainer.getCache(RUNNING_AGENTS);
+//	}
+//
+//	public Cache<?, ?> getCache(String name) {
+//		return cacheContainer.getCache(name);
+//	}
 }

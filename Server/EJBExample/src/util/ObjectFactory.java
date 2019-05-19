@@ -42,11 +42,11 @@ public abstract class ObjectFactory {
 	@SuppressWarnings("unchecked")
 	public static <T> T lookup(String name, Class<T> c) {
 		try {
-			return (T) ContextFactory.get().lookup(name);
+		return (T) ContextFactory.get().lookup(name);
 		} catch (NamingException ex) {
 			System.out.println("Failed to lookup: " + name);
-//			throw new IllegalStateException("Failed to lookup " + name, ex);
-			return null;
+			throw new IllegalStateException("Failed to lookup " + name, ex);
+		
 		}
 	}
 }

@@ -9,7 +9,7 @@ import messagemanager.ACLMessage;
 public interface Agent extends Serializable {
 	
 	String EJB_MODULE = "EJBExample";
-	String EAR_MODULE = "WebExample";
+	String EAR_MODULE = "WebExampleEAR";
 	String WAR_MODULE = "WebExample";
 
 	void init(AID aid, AgentInitArgs args);
