@@ -44,7 +44,9 @@ public abstract class ObjectFactory {
 		try {
 			return (T) ContextFactory.get().lookup(name);
 		} catch (NamingException ex) {
-			throw new IllegalStateException("Failed to lookup " + name, ex);
+			System.out.println("Failed to lookup: " + name);
+//			throw new IllegalStateException("Failed to lookup " + name, ex);
+			return null;
 		}
 	}
 }
