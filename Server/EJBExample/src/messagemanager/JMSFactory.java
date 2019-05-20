@@ -12,24 +12,29 @@ import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.QueueSession;
 import javax.jms.Session;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 import agentmanager.Agent;
 
+@Singleton
+@LocalBean
 public class JMSFactory {
 
 	private Connection connection;
-	@Resource(lookup = "java:jboss/exported/jms/RemoteConnectionFactory")
+	@Resource(lookup = "java:/ConnectionFactory")
 	private ConnectionFactory connectionFactory;
-	@Resource(lookup = "java:jboss/exported/jms/queue/siebog")
+	@Resource(lookup = "java:jboss/exported/jms/queue/test")
 	private Queue defaultQueue;
-	@Resource(lookup = "java:jboss/exported/jms/queue/siebog")
+	@Resource(lookup = "java:jboss/exported/jms/queue/test")
 	private Queue testQueue;
 
 	@PostConstruct
 	public void postConstruct() {
 		try {
-			//connection = connectionFactory.createConnection(siebog.nodemanager.Global.USERNAME, siebog.nodemanager.Global.PASSWORD);
-			connection = connectionFactory.createConnection("guest", "guest.guest.1");
+			
+			connection = connectionFactory.createConnection();
+			
 			connection.setClientID(Agent.EJB_MODULE);
 			connection.start();
 		} catch (JMSException ex) {

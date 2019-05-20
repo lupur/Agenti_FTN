@@ -9,7 +9,5 @@ public interface MessageManager {
 
 	void post(ACLMessage message);
 
-	void post(ACLMessage message, long delayMillisec);
-
 	String ping();
 }
