@@ -6,6 +6,7 @@ import java.util.List;
 import agent.AgentType;
 import agent.IAgent;
 import agent.AID;
+import agent.Agent;
 
 public interface IAgentCenter extends Serializable {
 
@@ -15,5 +16,7 @@ public interface IAgentCenter extends Serializable {
 	public AID startServerAgent(AgentType agType, String runtimeName);
 	public boolean stopAgent(String agentID);
 	public AgentType getAgentTypeByName(String name);
+	public String getAddress();
+	public IAgent findAgent(AID aid);
 
 }

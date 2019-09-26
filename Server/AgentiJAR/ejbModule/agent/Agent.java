@@ -1,5 +1,6 @@
 package agent;
 
+import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
 import agentCenter.AgentInitArgs;
@@ -7,6 +8,7 @@ import message.ACLMessage;
 
 @SuppressWarnings("serial")
 @Stateful
+@Remote(IAgent.class)
 public class Agent implements IAgent {
 
 	private AID aid;
@@ -41,9 +43,9 @@ public class Agent implements IAgent {
 	}
 
 	@Override
-	public void move(String host) {
+	public void setAid(AID aid) {
 		// TODO Auto-generated method stub
-		
+		this.aid = aid;
 	}
 	
 	

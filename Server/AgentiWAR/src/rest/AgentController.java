@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -16,13 +13,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import agent.AID;
 import agent.AgentType;
 import agent.IAgent;
 import agentCenter.AgentCenter;
-import sun.management.resources.agent_zh_CN;
 
 @Path("/agents")
+@Stateless
 public class AgentController {
 	
 	@EJB
@@ -42,7 +38,7 @@ public class AgentController {
 					+ agents.get(i).getName() + "]");
 		}
 		
-		return Response.ok().build();
+		return Response.ok(agents).build();
 	}
 	
 	@GET
@@ -54,7 +50,7 @@ public class AgentController {
 		
 		System.out.println("AIDS: " + aids.size());
 		
-		return Response.ok().build();
+		return Response.ok(aids).build();
 	}
 	
 	@PUT
@@ -76,6 +72,6 @@ public class AgentController {
 		{
 			return Response.ok().build();
 		}
-		return Response.serverError().build();
+		return Response.status(404).build();
 	}
 }

@@ -136,9 +136,10 @@ public class AgentCenter implements IAgentCenter {
 		try {
 			Context context = new InitialContext();
 			agent = (IAgent) context.lookup("java:global/AgentiEAR/AgentiJAR/" + aid.getType().getName());
+			
 			agents.add(agent);
 			agent.init(aid);
-			System.out.println("Added agent " + agent.getAid().getName());
+			System.out.println("Added agent " + agent.getAid().getStr());
 		} catch (NamingException ex) {
 			System.out.println("Context initialization error." + ex);
 		}
@@ -147,8 +148,7 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public AID startServerAgent(AgentType agType, String runtimeName) {
-		Node host = new Node();
-		AID aid = new AID(runtimeName, host, agType);
+		AID aid = new AID(runtimeName, node, agType);
 		startServerAgent(aid, true);
 		return aid;
 	}
@@ -167,5 +167,23 @@ public class AgentCenter implements IAgentCenter {
 		return false;
 	}
 	
+	@Override
+	public String getAddress()
+	{
+		return node.getAddress();
+	}
+	
+	@Override
+	public IAgent findAgent(AID aid)
+	{
+		for(IAgent a : agents)
+		{
+			if( a.getAid().equals(aid))
+			{
+				return a;
+			}			
+		}
+		return null;
+	}
 	
 }

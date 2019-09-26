@@ -13,7 +13,7 @@ import message.Performative;
 @SuppressWarnings("serial")
 @Stateful
 @Remote(IAgent.class)
-public class AgentPing extends Agent {
+public class AgentPong extends Agent {
 
 	@Override
 	public void handleMessage(ACLMessage msg)
@@ -21,18 +21,15 @@ public class AgentPing extends Agent {
 		if(msg.getPerformative() == Performative.REQUEST)
 		{
 			ACLMessage response = new ACLMessage();
-			response.setPerformative(Performative.REQUEST);
+			response.setPerformative(Performative.INFORM);
 			response.setSender(this.getAid());
 			List<AID> receivers = new ArrayList<AID>();
 			receivers.add(msg.getSender());
 			response.setReceivers(receivers);
 			response.setConversationId(msg.getConversationId());
+			System.out.println("["+this.getAid().getStr()+"] : Received message from: " + msg.getSender().getStr());
 			
 			new JMSQueue(response);
-		}
-		else if(msg.getPerformative() == Performative.INFORM)
-		{
-			System.out.println("["+this.getAid().getStr()+"] : Received response from: " + msg.getSender().getStr());
 		}
 	}
 }

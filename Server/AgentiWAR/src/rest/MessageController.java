@@ -11,8 +11,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.sun.org.apache.xerces.internal.util.Status;
+
 import message.ACLMessage;
 import message.IMessageManager;
+import jms.JMSQueue;
 
 @Path("/messages")
 public class MessageController {
@@ -32,9 +35,12 @@ public class MessageController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendMessage(ACLMessage  message)
 	{
+		if(message == null)
+		{
+			return Response.status(400).build();
+		}
 		messageManager.post(message);
-		
-		return Response.ok().build();		
+		return Response.ok().build();
 	}
 	
 }
