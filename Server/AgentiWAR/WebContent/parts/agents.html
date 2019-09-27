@@ -1,0 +1,33 @@
+<div ng-controller="agentController">
+	Heeej! 
+	<p><span ng-bind="test"></span></p>
+	<p><span ng-bind="test2"></span></p>
+	
+	All Agent Types:
+	<br/>
+	
+	<table>
+  		<tr ng-repeat="agentType in agentTypes">
+    		<td>{{ agentType.name }}</td>
+    		<td>{{ agentType.module }}</td>
+  		</tr>
+	</table>
+	
+	Type: <input ng-model="agentType">
+	Name: <input ng-model="agentName">
+	<button ng-click="startAgent()">Start!</button>
+	
+	<br/><br/>
+	
+	AID to stop: <input ng-model="aidToDelete">
+	<button ng-click="stopAgent()">Stop!</button>
+	
+	<br/><br/>
+	Running Agents:
+	<br/>
+	<table>
+  		<tr ng-repeat="runningAgent in runningAgents">
+    		<td>{{ runningAgent.aid }}</td>
+  		</tr>
+	</table>
+</div>
