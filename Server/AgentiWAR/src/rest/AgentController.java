@@ -52,7 +52,12 @@ public class AgentController {
 	public Response getRunningAgents()
 	{
 		
-		return Response.ok(agentCenter.getAIDSFromRunningAgents()).build();
+		List<AID> aids = agentCenter.getAIDSFromRunningAgents();
+		System.out.println("*****************");
+		System.out.println(aids.size());
+		System.out.println(aids.size());
+		System.out.println(aids.size());
+		return Response.ok(aids).build();
 	}
 	
 	@PUT
