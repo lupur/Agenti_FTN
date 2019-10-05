@@ -1,6 +1,7 @@
 package agentCenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,12 +13,16 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
-import com.sun.xml.internal.bind.v2.ContextFactory;
+
 
 import agent.AID;
 import agent.Agent;
@@ -44,7 +49,8 @@ public class AgentCenter implements IAgentCenter {
 	private ArrayList<Node> nodes = new ArrayList<Node>();
 	ResteasyClient restClient = new ResteasyClientBuilder().build();
 	
-	private ArrayList<IAgent> agents = new ArrayList<IAgent>();
+	private List<IAgent> agents = new ArrayList<IAgent>();
+	private HashMap<String, List<AgentType>> supportedTypes = new HashMap<>();
 	
 	public AgentCenter() {};
 	
@@ -70,25 +76,36 @@ public class AgentCenter implements IAgentCenter {
 			masterNode = node;
 			nodes = new ArrayList<Node>();
 			nodes.add(node);
+			supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
+
 			System.out.println("Master node has been created.");
 		}
 		else
 		{
 			masterNode = new Node();
-			masterNode.setAlias("mater");
+			masterNode.setAlias("master");
 			masterNode.setAddress(params[2]);
 			
 			System.out.println("Slave node has been created.");
-			
-			//TODO: SHOULD IMPLEMENT REGISTRATION METHOD;
+			registerNode();
 		}
+		
 	}
 	
 	public boolean registerNode()
 	{
-		String url = "http://" + masterNode.getAddress() + "Agenti/api/agentCenter/node";
+		supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
+
+		String url = "http://" + masterNode.getAddress() + "/AgentiWAR/api/center/node";
 		ResteasyWebTarget master = restClient.target(url);
 		
+
+		Response response = master.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(this, MediaType.APPLICATION_JSON));
+		AgentCenter tmp = response.readEntity(new GenericType<AgentCenter>() {});
+		this.nodes = tmp.getNodes();
+		this.agents = tmp.getRunningAgents();
+		this.supportedTypes = tmp.getSupportedTypes();
 		return true;
 	}
 	
@@ -137,8 +154,8 @@ public class AgentCenter implements IAgentCenter {
 			Context context = new InitialContext();
 			agent = (IAgent) context.lookup("java:global/AgentiEAR/AgentiJAR/" + aid.getType().getName());
 			
-			agents.add(agent);
 			agent.init(aid);
+			agents.add(agent);
 			System.out.println("Added agent " + agent.getAid().getStr());
 		} catch (NamingException ex) {
 			System.out.println("Context initialization error." + ex);
@@ -185,5 +202,104 @@ public class AgentCenter implements IAgentCenter {
 		}
 		return null;
 	}
+
+	@Override
+	public void informNodes(AgentCenter newCenter)
+	{
+		if(!node.getAlias().equals("master"))
+		{
+			System.out.println("Only master can inform others");
+			return;
+		}
+		
+		restClient = new ResteasyClientBuilder().build();
+		for(Node n : nodes)
+		{
+			if(n.getAlias().equals("master") || n.getAlias().equals(newCenter.getNode().getAlias()))
+			{
+				continue;
+			}
+			
+			ResteasyWebTarget target = restClient.target("http://"+n.getAddress()+"/AgentiWAR/api/center/node");
+			Response response = target.request(MediaType.APPLICATION_JSON)
+					.post(Entity.entity(newCenter, MediaType.APPLICATION_JSON));
+		}
+		System.out.println("Nodes were informed about new member");
+	}
 	
+	public Node getNode() {
+		return node;
+	}
+
+	public void setNode(Node node) {
+		this.node = node;
+	}
+
+	public Node getMasterNode() {
+		return masterNode;
+	}
+
+	public void setMasterNode(Node masterNode) {
+		this.masterNode = masterNode;
+	}
+
+	@Override
+	public ArrayList<Node> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(ArrayList<Node> nodes) {
+		this.nodes = nodes;
+	}
+
+	@Override
+	public HashMap<String, List<AgentType>> getSupportedTypes() {
+		return supportedTypes;
+	}
+	
+	@Override
+	public void deleteNode(Node n)
+	{
+		this.getSupportedTypes().remove(n.getAlias());
+		
+		for(IAgent a :  new ArrayList<IAgent>(agents))
+		{
+			if(a.getAid().getHost().equals(n.getAlias()))
+			{
+				agents.remove(a);
+			}
+		}
+		
+		nodes.remove(n);
+	}
+	
+	@Override
+	public void deleteNodeFromAll(Node n)
+	{
+		if(!node.getAlias().equals("master"))
+		{
+			return;
+		}
+		
+		for(Node tmp : nodes)
+		{
+			if(tmp.getAlias().equals("master") || n.getAlias().equals(n.getAlias()))
+				continue;
+			
+			ResteasyWebTarget target = restClient.target("http://" + tmp.getAddress() +"/AgentiWAR/api/center/node/" + n.getAlias());
+            Response response = target.request().delete();
+
+		}
+	
+	}
+	
+	public List<AID> getAIDSFromRunningAgents()
+	{
+		List<AID> agentAIDS = new ArrayList<AID>();
+		for(IAgent agent : getRunningAgents())
+		{
+			agentAIDS.add(agent.getAid());
+		}
+		return agentAIDS;
+	}
 }

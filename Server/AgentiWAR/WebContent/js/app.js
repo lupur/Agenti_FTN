@@ -3,7 +3,7 @@ var app = angular.module("agentClient", ['ngRoute', 'angular-websocket']);
 
 app.run(function ($websocket) {
 	
-	var dataStream = $websocket('ws://echo.websocket.org');
+	var dataStream = $websocket('ws://localhost:8080/AgentiWAR/runningAgents');
 	
     dataStream.onMessage(function(message) {
     	console.log(message);

@@ -1,0 +1,27 @@
+table {
+    border: solid 1px #333333;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+}
+table thead th {
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-align: center;
+}
+table tbody td {
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+}
+
+caption {
+    text-align: center
+    background-color: #;
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+    font: bold 13px Arial, sans-serif;
+}

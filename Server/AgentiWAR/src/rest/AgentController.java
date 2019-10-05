@@ -1,5 +1,6 @@
 package rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -13,12 +14,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+
+import agent.AID;
 import agent.AgentType;
 import agent.IAgent;
 import agentCenter.AgentCenter;
+import socket.RunningAgentsSocket;
+import util.JSON;
 
 @Path("/agents")
-@Stateless
 public class AgentController {
 	
 	@EJB
@@ -46,11 +51,8 @@ public class AgentController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRunningAgents()
 	{
-		List<IAgent> aids = agentCenter.getRunningAgents();
 		
-		System.out.println("AIDS: " + aids.size());
-		
-		return Response.ok(aids).build();
+		return Response.ok(agentCenter.getAIDSFromRunningAgents()).build();
 	}
 	
 	@PUT
@@ -60,6 +62,8 @@ public class AgentController {
 	{
 		AgentType agentType = agentCenter.getAgentTypeByName(type);
 		agentCenter.startServerAgent(agentType, name);
+		
+		RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getAIDSFromRunningAgents()));
 		return Response.ok().build();
 	}
 	
@@ -70,6 +74,7 @@ public class AgentController {
 	{
 		if(agentCenter.stopAgent(agentID))
 		{
+			RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getAIDSFromRunningAgents()));
 			return Response.ok().build();
 		}
 		return Response.status(404).build();
