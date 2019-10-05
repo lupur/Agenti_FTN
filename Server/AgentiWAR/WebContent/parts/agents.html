@@ -1,33 +1,57 @@
 <div ng-controller="agentController">
-	Heeej! 
-	<p><span ng-bind="test"></span></p>
-	<p><span ng-bind="test2"></span></p>
-	
-	All Agent Types:
-	<br/>
-	
-	<table>
+<div class="modal-body row">
+  <div class="col-md-6">
+    <table class="table">
+    	<caption style="caption-side: top; text-align: center; font-weight: bold;" class="bg-dark text-white">Agent Types</caption>
+		<thead class="thead-dark">
+			<th scope="col">#</th>
+			<th scope="col">Type Name</th>
+      		<th scope="col">Type Module</th>
+      		<th scope="col">Agent Name</th>
+      		<th scope="col">Action</th>
+		</thead>
   		<tr ng-repeat="agentType in agentTypes">
+  		<form class="needs-validation" novalidate>
+  			<th scope="row">{{$index+1}}</th>
     		<td>{{ agentType.name }}</td>
     		<td>{{ agentType.module }}</td>
+    		<td>
+   				<input ng-model="agentType.agentName" type="text" class="form-control" id="validationTooltip03" placeholder="Agent name..." required>
+   				<div class="invalid-tooltip">
+     				Please provide a valid agent name.
+   				</div>
+    		</td>
+    		<td><button type="submit" class="btn btn-info" ng-click="startAgent(agentType)">Start</button></td>
+  		</tr>
+  		</form>
+	</table>
+	<table class="table">
+    	<caption style="caption-side: top; text-align: center; font-weight: bold;" class="bg-dark text-white">Running Agents</caption>
+		<thead class="thead-dark">
+			<th scope="col">#</th>
+			<th scope="col">Host Address</th>
+      		<th scope="col">Host Alias</th>
+      		<th scope="col">Name</th>
+      		<th scope="col">Str</th>
+      		<th scope="col">Type module</th>
+      		<th scope="col">Type Name</th>
+      		<th scope="col">Action</th>
+		</thead>
+  		<tr ng-repeat="agent in runningAgents">
+  			<th scope="row">{{$index+1}}</th>
+    		<td>{{agent.aid.host.address}}</td>
+    		<td>{{agent.aid.host.alias}}</td>
+    		<td>{{agent.aid.name}}</td>
+    		<td>{{agent.aid.str}}</td>
+    		<td>{{agent.aid.type.module}}</td>
+    		<td>{{agent.aid.type.name}}</td>
+    		<td><button type="button" class="btn btn-info" ng-click="stopAgent(agent.aid.str)">Stop</button></td>
   		</tr>
 	</table>
-	
-	Type: <input ng-model="agentType">
-	Name: <input ng-model="agentName">
-	<button ng-click="startAgent()">Start!</button>
-	
-	<br/><br/>
-	
-	AID to stop: <input ng-model="aidToDelete">
-	<button ng-click="stopAgent()">Stop!</button>
-	
-	<br/><br/>
-	Running Agents:
-	<br/>
-	<table>
-  		<tr ng-repeat="runningAgent in runningAgents">
-    		<td>{{ runningAgent.aid }}</td>
-  		</tr>
-	</table>
+
+  </div>
+  <br/>
+  <div class="col-md-6">
+  </div>
+</div>
 </div>
