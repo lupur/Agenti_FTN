@@ -1,4 +1,4 @@
-app.controller('agentController', function($scope, agentService, messageService) {
+app.controller('agentController', function($scope, agentService, messageService, $websocket) {
 	$scope.test = "John";
 	agentService.getClasses().then(function(response) {
 		$scope.agentTypes = response.data;
@@ -24,7 +24,7 @@ app.controller('agentController', function($scope, agentService, messageService)
 		$scope.performatives = response.data;
 	});
 	
-	setInterval(function() {getRunningAgents()}, 5000);
+	setInterval(function() {getRunningAgents()}, 1000);
 	
 	function getRunningAgents() {
 		agentService.getRunningAgents().then(function(response) {
@@ -34,5 +34,14 @@ app.controller('agentController', function($scope, agentService, messageService)
 			}		
 		});
 	}
+	
+	var dataStream = $websocket('ws://localhost:8080/AgentiWAR/runningAgents');
+	
+    dataStream.onMessage(function(response) {
+    	$scope.runningAgents = JSON.parse(response.data);
+    	if(!$scope.$$phase) {
+			$scope.$apply();
+		}	
+    });
 
 });

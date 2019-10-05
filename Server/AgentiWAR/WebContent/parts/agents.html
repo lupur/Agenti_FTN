@@ -37,15 +37,15 @@
       		<th scope="col">Type Name</th>
       		<th scope="col">Action</th>
 		</thead>
-  		<tr ng-repeat="agent in runningAgents">
+  		<tr ng-repeat="aid in runningAgents track by $index">
   			<th scope="row">{{$index+1}}</th>
-    		<td>{{agent.aid.host.address}}</td>
-    		<td>{{agent.aid.host.alias}}</td>
-    		<td>{{agent.aid.name}}</td>
-    		<td>{{agent.aid.str}}</td>
-    		<td>{{agent.aid.type.module}}</td>
-    		<td>{{agent.aid.type.name}}</td>
-    		<td><button type="button" class="btn btn-info" ng-click="stopAgent(agent.aid.str)">Stop</button></td>
+    		<td>{{aid.host.address}}</td>
+    		<td>{{aid.host.alias}}</td>
+    		<td>{{aid.name}}</td>
+    		<td>{{aid.str}}</td>
+    		<td>{{aid.type.module}}</td>
+    		<td>{{aid.type.name}}</td>
+    		<td><button type="button" class="btn btn-info" ng-click="stopAgent(aid.str)">Stop</button></td>
   		</tr>
 	</table>
 

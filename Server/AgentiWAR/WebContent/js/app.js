@@ -1,13 +1,13 @@
 'use strict';
 var app = angular.module("agentClient", ['ngRoute', 'angular-websocket']);
 
-app.run(function ($websocket) {
+//app.run(function ($websocket) {
 	
-	var dataStream = $websocket('ws://localhost:8080/AgentiWAR/runningAgents');
-	
-    dataStream.onMessage(function(message) {
-    	console.log(message);
-      });
+//	var dataStream = $websocket('ws://localhost:8080/AgentiWAR/runningAgents');
+//	
+//    dataStream.onMessage(function(message) {
+//    	console.log(message);
+//      });
 //    var ws = $websocket.$new('ws://localhost:8080/AgentiWAR/agentClasses'); // instance of ngWebsocket, handled by $websocket service
 //
 //    ws.$on('$open', function () {
@@ -42,7 +42,7 @@ app.run(function ($websocket) {
 //    ws.$on('$close', function () {
 //        console.log('Noooooooooou, I want to have more fun with ngWebsocket, damn it!');
 //    });
-});
+//});
 
 app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider
