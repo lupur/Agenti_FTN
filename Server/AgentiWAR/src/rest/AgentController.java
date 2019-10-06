@@ -51,12 +51,10 @@ public class AgentController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRunningAgents()
 	{
-		
-		List<AID> aids = agentCenter.getAIDSFromRunningAgents();
 		System.out.println("*****************");
+		List<AID> aids = agentCenter.getAIDSFromRunningAgents();
 		System.out.println(aids.size());
-		System.out.println(aids.size());
-		System.out.println(aids.size());
+
 		return Response.ok(aids).build();
 	}
 	

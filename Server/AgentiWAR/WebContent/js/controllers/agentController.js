@@ -24,7 +24,7 @@ app.controller('agentController', function($scope, agentService, messageService,
 		$scope.performatives = response.data;
 	});
 	
-	setInterval(function() {getRunningAgents()}, 1000);
+	getRunningAgents()
 	
 	function getRunningAgents() {
 		agentService.getRunningAgents().then(function(response) {

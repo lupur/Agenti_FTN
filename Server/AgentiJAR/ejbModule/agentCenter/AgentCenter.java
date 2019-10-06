@@ -5,13 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.AccessTimeout;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Remote;
-import javax.ejb.Stateless;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -25,18 +28,17 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 
 import agent.AID;
-import agent.Agent;
 import agent.AgentType;
 import agent.IAgent;
 import config.ReadConfig;
-import sun.management.resources.agent;
 import util.JNDITreeParser;
-
-import java.util.Hashtable;
 
 
 @SuppressWarnings("serial")
-@Stateless
+@Startup
+@Singleton
+@Lock(LockType.READ)
+@AccessTimeout(-1)
 @Remote(IAgentCenter.class)
 @LocalBean
 public class AgentCenter implements IAgentCenter {
@@ -70,25 +72,25 @@ public class AgentCenter implements IAgentCenter {
 		node.setAlias(params[0]);
 		node.setAddress(params[1]);
 		
-		if(node.getAlias().equals("master"))
-		{
-			masterNode = new Node();
-			masterNode = node;
-			nodes = new ArrayList<Node>();
-			nodes.add(node);
-			supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
-
-			System.out.println("Master node has been created.");
-		}
-		else
-		{
-			masterNode = new Node();
-			masterNode.setAlias("master");
-			masterNode.setAddress(params[2]);
-			
-			System.out.println("Slave node has been created.");
-			registerNode();
-		}
+//		if(node.getAlias().equals("master"))
+//		{
+//			masterNode = new Node();
+//			masterNode = node;
+//			nodes = new ArrayList<Node>();
+//			nodes.add(node);
+//			supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
+//
+//			System.out.println("Master node has been created.");
+//		}
+//		else
+//		{
+//			masterNode = new Node();
+//			masterNode.setAlias("master");
+//			masterNode.setAddress(params[2]);
+//			
+//			System.out.println("Slave node has been created.");
+//			registerNode();
+//		}
 		
 	}
 	
@@ -296,8 +298,9 @@ public class AgentCenter implements IAgentCenter {
 	public List<AID> getAIDSFromRunningAgents()
 	{
 		List<AID> agentAIDS = new ArrayList<AID>();
-		for(IAgent agent : getRunningAgents())
+		for(IAgent agent : this.agents)
 		{
+			System.out.println("- " + agent.getAid().getStr());
 			agentAIDS.add(agent.getAid());
 		}
 		return agentAIDS;

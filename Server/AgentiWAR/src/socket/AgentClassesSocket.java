@@ -1,6 +1,5 @@
 package socket;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +17,6 @@ import util.JSON;
 
 @ServerEndpoint(value = "/agentClasses")
 public class AgentClassesSocket {
-
-	@EJB
-	AgentCenter agentCenter;
 	
 	private static List<Session> sessions = new ArrayList<Session>();
 	
@@ -42,8 +38,6 @@ public class AgentClassesSocket {
     public void onMessage(String message, Session session) {
         System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
         
-        List<AgentType> agents = agentCenter.getAvailableAgentClasses();
-		session.getAsyncRemote().sendText(JSON.g.toJson(agents));
     }
     
 	public static void sendAvailableAgentClasses()
