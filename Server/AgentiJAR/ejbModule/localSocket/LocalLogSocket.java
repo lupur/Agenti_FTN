@@ -8,6 +8,7 @@ import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
@@ -43,6 +44,13 @@ public class LocalLogSocket {
         System.out.println("Closing local websocket");
         this.userSession = null;
     }
+    
+    @OnMessage
+    public void onMessage(String message)
+    {
+    	
+    }
+    
     
     public void sendMessage(String message) {
         this.userSession.getAsyncRemote().sendText(message);
