@@ -23,7 +23,8 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
-
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 
 import agent.AID;
 import agent.AgentType;
@@ -37,6 +38,8 @@ import util.JNDITreeParser;
 @Singleton
 @Remote(IAgentCenter.class)
 @LocalBean
+@Lock(LockType.READ)
+@AccessTimeout(-1)
 public class AgentCenter implements IAgentCenter {
 
 	@EJB

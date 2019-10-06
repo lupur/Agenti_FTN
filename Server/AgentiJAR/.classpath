@@ -13,7 +13,6 @@
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Faks - Apsolvent/agenti/git_folder/Agenti_FTN/Server/AgentiEAR/EarContent/lib/gson-2.2.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java_jre_1.8">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -24,5 +23,6 @@
 	<classpathentry kind="lib" path="D:/Wildfly/wildfly-14.0.0.Final/modules/system/layers/base/org/jboss/resteasy/resteasy-jaxrs/main/resteasy-jaxrs-3.6.1.Final.jar"/>
 	<classpathentry kind="lib" path="D:/Wildfly/wildfly-14.0.0.Final/modules/system/layers/base/javax/jms/api/main/jboss-jms-api_2.0_spec-1.0.2.Final.jar"/>
 	<classpathentry kind="lib" path="/AgentiEAR/EarContent/lib/tyrus-standalone-client-1.9.jar"/>
+	<classpathentry kind="lib" path="/AgentiEAR/EarContent/lib/gson-2.2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
