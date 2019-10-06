@@ -10,9 +10,9 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "/runningAgents")
-public class RunningAgentsSocket {
-
+@ServerEndpoint(value = "/log")
+public class LogSocket {
+	
 	private static List<Session> sessions = new ArrayList<Session>();
 	
 	@OnOpen
@@ -32,9 +32,10 @@ public class RunningAgentsSocket {
 	@OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
+        sendLog(message);
     }
     
-	public static void sendRunningAgents(String message)
+	public static void sendLog(String message)
 	{
         for(Session s : sessions)
         {

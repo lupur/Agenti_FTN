@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="D:/Wildfly/wildfly-14.0.0.Final/modules/system/layers/base/javax/ws/rs/api/main/jboss-jaxrs-api_2.1_spec-1.0.1.Final.jar"/>
 	<classpathentry kind="lib" path="D:/Wildfly/wildfly-14.0.0.Final/modules/system/layers/base/org/jboss/resteasy/resteasy-jaxrs/main/resteasy-jaxrs-3.6.1.Final.jar"/>
 	<classpathentry kind="lib" path="D:/Wildfly/wildfly-14.0.0.Final/modules/system/layers/base/javax/jms/api/main/jboss-jms-api_2.0_spec-1.0.2.Final.jar"/>
+	<classpathentry kind="lib" path="/AgentiEAR/EarContent/lib/tyrus-standalone-client-1.9.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

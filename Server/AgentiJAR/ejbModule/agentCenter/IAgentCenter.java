@@ -26,5 +26,6 @@ public interface IAgentCenter extends Serializable {
 	public Node getNode();
 	public void deleteNodeFromAll(Node n);
 	public void deleteNode(Node n);
+	public List<AID> getAIDSFromRunningAgents();
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,14 +21,16 @@ import agent.AID;
 import agent.AgentType;
 import agent.IAgent;
 import agentCenter.AgentCenter;
+import agentCenter.IAgentCenter;
 import socket.RunningAgentsSocket;
 import util.JSON;
 
 @Path("/agents")
+@LocalBean
 public class AgentController {
 	
 	@EJB
-	AgentCenter agentCenter;
+	IAgentCenter agentCenter;
 	
 	@GET
 	@Path("/classes")

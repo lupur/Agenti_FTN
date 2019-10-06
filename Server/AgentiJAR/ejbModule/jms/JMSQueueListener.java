@@ -1,6 +1,5 @@
 package jms;
 
-import javax.ejb.AccessTimeout;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
@@ -8,12 +7,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import agent.AID;
 import agent.IAgent;
@@ -55,12 +48,7 @@ public class JMSQueueListener implements MessageListener {
 					}
 					System.out.println("Sending message to: " + agent.getAid().getStr());
 					agent.handleMessage(message);
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 				}
 				else
 				{

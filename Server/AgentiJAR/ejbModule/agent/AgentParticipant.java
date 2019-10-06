@@ -11,6 +11,7 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
 import agentCenter.IAgentCenter;
+import localSocket.LocalLogSocket;
 import message.ACLMessage;
 import message.IMessageManager;
 import message.Performative;
@@ -29,6 +30,12 @@ public class AgentParticipant extends Agent {
 	@Override
 	public void handleMessage(ACLMessage msg)
 	{
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		switch (msg.getPerformative()) {
 		case CALL_FOR_PROPOSAL:
 			handleProposal(msg);
@@ -48,8 +55,10 @@ public class AgentParticipant extends Agent {
 	
 	private void handleProposal(ACLMessage msg)
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println("Call for proposal from: " + msg.getSender().getStr());
+		String message = "[" + this.getAid().getStr() +"]: \n" +
+					"Call for proposal from: " + msg.getSender().getStr();
+		LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
+		logger.sendMessage(message);
 		ACLMessage response = new ACLMessage();
 		response.setSender(this.getAid());
 		
@@ -61,28 +70,36 @@ public class AgentParticipant extends Agent {
 		
 		if(date.getTime() % 3 == 0)
 		{
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.println("Decided not to participate.");
+			message = "[" + this.getAid().getStr() +"]: \n" +
+								"Decided not to participate.";
+			
 			response.setPerformative(Performative.REFUSE);
 		}
 		else
 		{
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.print("Decided to participate.");
+			message = "[" + this.getAid().getStr() +"]: \n"
+						+ "Decided to participate.";
 			response.setPerformative(Performative.PROPOSE);
 		}
+		logger.sendMessage(message);
 		messageManager.post(response);
 	}
 	
 	private void handleRejectProposal(ACLMessage msg) {
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println("Proposal rejected by " + msg.getSender().getStr());
+		String message = "[" + this.getAid().getStr() +"]: \n" +
+						"Proposal rejected by " + msg.getSender().getStr();
+		
+		LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
+		logger.sendMessage(message);
+		
 	}
 	
 	private void doWork(ACLMessage msg)
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println("Doing some work for: " + msg.getSender().getStr());
+		String message = "[" + this.getAid().getStr() +"]: \n" +
+						"Doing some work for: " + msg.getSender().getStr();
+		LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
+		logger.sendMessage(message);
 		ACLMessage response = new ACLMessage();
 		response.setSender(this.getAid());
 		
@@ -94,16 +111,18 @@ public class AgentParticipant extends Agent {
 		
 		if(date.getTime() % 5 == 0)
 		{
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.println("Failed to finish the job for: " + msg.getSender().getStr());
+			message = "[" + this.getAid().getStr() +"]: \n" +
+							"Failed to finish the job for: " + msg.getSender().getStr();
+			logger.sendMessage(message);
 			response.setPerformative(Performative.FAILURE);
 			response.setContent("Could not finish the task.");
 		}
 		else
 		{
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.println("Finished the job for: " + msg.getSender().getStr());
+			message = "[" + this.getAid().getStr() +"]: \n" +
+					"Finished the job for: " + msg.getSender().getStr();
+			logger.sendMessage(message);
 			response.setPerformative(Performative.INFORM);
 			response.setContent("Finish the task at: " + formatter.format(date));
 			

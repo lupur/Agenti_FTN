@@ -3,17 +3,12 @@ package socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-
-import agent.AgentType;
-import agentCenter.AgentCenter;
-import util.JSON;
 
 @ServerEndpoint(value = "/agentClasses")
 public class AgentClassesSocket {
@@ -40,21 +35,15 @@ public class AgentClassesSocket {
         
     }
     
-	public static void sendAvailableAgentClasses()
+	public static void sendAvailableAgentClasses(String message)
 	{
-//        List<AgentType> agents = agentCenter.getAvailableAgentClasses();
-//        for(Session s : sessions)
-//        {
-//        	if(s.isOpen())
-//        	{
-//                try {
-//					s.getBasicRemote().sendText(JSON.g.toJson(agents));
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//        	}
-//        }
+		for(Session s : sessions)
+		{
+			if(s.isOpen())
+			{
+				s.getAsyncRemote().sendText(message);
+			}
+		}
 	}
 	
     @OnError

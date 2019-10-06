@@ -10,8 +10,6 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
 import javax.ejb.Remote;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -37,8 +35,6 @@ import util.JNDITreeParser;
 @SuppressWarnings("serial")
 @Startup
 @Singleton
-@Lock(LockType.READ)
-@AccessTimeout(-1)
 @Remote(IAgentCenter.class)
 @LocalBean
 public class AgentCenter implements IAgentCenter {
@@ -72,25 +68,25 @@ public class AgentCenter implements IAgentCenter {
 		node.setAlias(params[0]);
 		node.setAddress(params[1]);
 		
-//		if(node.getAlias().equals("master"))
-//		{
-//			masterNode = new Node();
-//			masterNode = node;
-//			nodes = new ArrayList<Node>();
-//			nodes.add(node);
-//			supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
-//
-//			System.out.println("Master node has been created.");
-//		}
-//		else
-//		{
-//			masterNode = new Node();
-//			masterNode.setAlias("master");
-//			masterNode.setAddress(params[2]);
-//			
-//			System.out.println("Slave node has been created.");
-//			registerNode();
-//		}
+		if(node.getAlias().equals("master"))
+		{
+			masterNode = new Node();
+			masterNode = node;
+			nodes = new ArrayList<Node>();
+			nodes.add(node);
+			supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
+
+			System.out.println("Master node has been created.");
+		}
+		else
+		{
+			masterNode = new Node();
+			masterNode.setAlias("master");
+			masterNode.setAddress(params[2]);
+			
+			System.out.println("Slave node has been created.");
+			registerNode();
+		}
 		
 	}
 	

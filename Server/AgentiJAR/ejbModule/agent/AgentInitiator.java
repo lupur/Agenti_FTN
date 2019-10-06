@@ -9,9 +9,11 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
 import agentCenter.IAgentCenter;
+import localSocket.LocalLogSocket;
 import message.ACLMessage;
 import message.IMessageManager;
 import message.Performative;
+
 
 @SuppressWarnings("serial")
 @Stateful
@@ -27,6 +29,12 @@ public class AgentInitiator extends Agent {
 	@Override
 	public void handleMessage(ACLMessage msg)
 	{
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		switch(msg.getPerformative())
 		{
 		case REQUEST:
@@ -53,16 +61,22 @@ public class AgentInitiator extends Agent {
 	
 	private void initiateProtocol()
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
+		
 		ArrayList<AID> participants = getParticipants();
 		if(participants.isEmpty())
 		{
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.println("No active participants to initiate contract.");
+			String message = "[" + this.getAid().getStr() +"]: ";
+			message += "\nNo active participants to initiate contract.";
+			System.out.print(message);
+			LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
+			socket.sendMessage(message);
 			return;
 		}
-		System.out.print("Sending proposal to participants:");
-		System.out.println(participants.toString());
+		String message = "[" + this.getAid().getStr() +"]: ";
+		message += "Sending proposal to participants:\n" + participants.toString();
+		System.out.print(message);
+		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
+		socket.sendMessage(message);
 		ACLMessage cfp = new ACLMessage();
 		cfp.setPerformative(Performative.CALL_FOR_PROPOSAL);
 		cfp.setReceivers(participants);
@@ -72,8 +86,11 @@ public class AgentInitiator extends Agent {
 	
 	private void handlePropose(ACLMessage msg)
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println("Received proposal from: " + msg.getSender().getStr());
+		String message = "[" + this.getAid().getStr() +"]: \n" + 
+						"Received proposal from: " + msg.getSender().getStr();
+		System.out.print(message);
+		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
+		socket.sendMessage(message);
 		
 		ACLMessage response = new ACLMessage();
 		List<AID> recv = new ArrayList<AID>();
@@ -85,14 +102,18 @@ public class AgentInitiator extends Agent {
 		
 		if(date.getTime() % 3 == 0)
 		{
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.println("Rejecting proposal from: " + msg.getSender().getStr());
+			message = "[" + this.getAid().getStr() +"]: \n" +
+					"Rejecting proposal from: " + msg.getSender().getStr();
+			System.out.print(message);
+			socket.sendMessage(message);
 			response.setPerformative(Performative.REJECT_PROPOSAL);
 		}
 		else
 		{
-			System.out.print("[" + this.getAid().getStr() +"]: ");
-			System.out.println("Acceptiong proposal from: " + msg.getSender().getStr());
+			message = "[" + this.getAid().getStr() +"]: " +
+						"Acceptiong proposal from: " + msg.getSender().getStr();
+			System.out.println(message);
+			socket.sendMessage(message);
 			response.setPerformative(Performative.ACCEPT_PROPOSAL);
 		}
 		
@@ -102,20 +123,26 @@ public class AgentInitiator extends Agent {
 	
 	private void handleRefuse(ACLMessage msg)
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println(msg.getSender().getStr() + " refused proposal.");
+		String message = "[" + this.getAid().getStr() +"]: \n" +
+					msg.getSender().getStr() + " refused proposal.";
+		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
+		socket.sendMessage(message);
 	}
 	
 	private void handleInform(ACLMessage msg)
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println("From: " + msg.getSender().getStr() + " received info: "+ msg.getContent());
+		String message = "[" + this.getAid().getStr() +"]: \n"+
+					"From: " + msg.getSender().getStr() + " received info: "+ msg.getContent();
+		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
+		socket.sendMessage(message);
 	}
 	
 	public void handleFailure(ACLMessage msg)
 	{
-		System.out.print("[" + this.getAid().getStr() +"]: ");
-		System.out.println(msg.getSender().getStr() + " failed.");
+		String message = "[" + this.getAid().getStr() +"]: \n" +
+					msg.getSender().getStr() + " failed.";
+		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
+		socket.sendMessage(message);
 	}
 	
 	private ArrayList<AID> getParticipants()
