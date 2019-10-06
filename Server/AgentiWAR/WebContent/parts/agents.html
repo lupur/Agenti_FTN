@@ -33,8 +33,7 @@
       		<th scope="col">Host Alias</th>
       		<th scope="col">Name</th>
       		<th scope="col">Str</th>
-      		<th scope="col">Type module</th>
-      		<th scope="col">Type Name</th>
+      		<th scope="col">Type</th>
       		<th scope="col">Action</th>
 		</thead>
   		<tr ng-repeat="aid in runningAgents track by $index">
@@ -43,15 +42,17 @@
     		<td>{{aid.host.alias}}</td>
     		<td>{{aid.name}}</td>
     		<td>{{aid.str}}</td>
-    		<td>{{aid.type.module}}</td>
     		<td>{{aid.type.name}}</td>
-    		<td><button type="button" class="btn btn-info" ng-click="stopAgent(aid.str)">Stop</button></td>
+    		<td>
+    			<button ng-if="aid.type.name ==='AgentPing' || aid.type.name ==='AgentInitiator'" type="button" class="btn btn-success" ng-click="sendMessage(aid)">Work</button>
+    			<button type="button" class="btn btn-danger" ng-click="stopAgent(aid.str)">Stop</button>
+    		</td>
   		</tr>
 	</table>
-
   </div>
   <br/>
   <div class="col-md-6">
+  
   </div>
 </div>
 </div>

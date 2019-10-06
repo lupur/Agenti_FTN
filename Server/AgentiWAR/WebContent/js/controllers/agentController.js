@@ -1,5 +1,6 @@
 app.controller('agentController', function($scope, agentService, messageService, $websocket) {
 	$scope.test = "John";
+	$scope.selectedSender = "";
 	agentService.getClasses().then(function(response) {
 		$scope.agentTypes = response.data;
 	});
@@ -20,11 +21,27 @@ app.controller('agentController', function($scope, agentService, messageService,
 		});
 	}
 	
+	$scope.sendMessage = function(aid) {
+		let message = {};
+		message.performative = 'REQUEST',
+		message.receivers = [{
+			name: aid.name,
+			str: aid.str,
+			host: aid.host
+		}];
+		
+		messageService.sendMessage(message).then(function(response) {
+			console.log("Message sent sucessfully");
+		});	
+	}
+	
 	messageService.getPerformatives().then(function(response) {
 		$scope.performatives = response.data;
 	});
 	
-	getRunningAgents()
+	getRunningAgents();
+	
+
 	
 	function getRunningAgents() {
 		agentService.getRunningAgents().then(function(response) {
