@@ -81,7 +81,7 @@ public class AgentPing extends Agent {
 		}
 		Random rand = new Random();
 		
-		return pongs.get(rand.nextInt(pongs.size()-1));
+		return pongs.get(rand.nextInt(pongs.size()));
 		
 	}
 }

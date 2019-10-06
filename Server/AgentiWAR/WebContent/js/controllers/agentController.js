@@ -39,6 +39,8 @@ app.controller('agentController', function($scope, agentService, messageService,
 		$scope.performatives = response.data;
 	});
 	
+	
+	
 	getRunningAgents();
 	
 
@@ -56,6 +58,17 @@ app.controller('agentController', function($scope, agentService, messageService,
 	
     dataStream.onMessage(function(response) {
     	$scope.runningAgents = JSON.parse(response.data);
+    	if(!$scope.$$phase) {
+			$scope.$apply();
+		}	
+    });
+    
+    var logStream = $websocket('ws://localhost:8080/AgentiWAR/log');
+    
+    $scope.logs = [];
+	
+    logStream.onMessage(function(response) {
+    	$scope.logs.push(response.data);
     	if(!$scope.$$phase) {
 			$scope.$apply();
 		}	

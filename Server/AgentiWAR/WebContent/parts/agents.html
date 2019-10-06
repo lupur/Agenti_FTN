@@ -52,7 +52,12 @@
   </div>
   <br/>
   <div class="col-md-6">
-  
+  	<table class="table" style="position: relative; height: 70%; overflow: auto; display: block;">
+    	<caption style="caption-side: top; text-align: center; font-weight: bold;" class="bg-dark text-white">Messages</caption>
+    	<tr ng-repeat="log in logs track by $index">
+    		<td>{{log}}</td>
+    	</tr>
+    <table>
   </div>
 </div>
 </div>

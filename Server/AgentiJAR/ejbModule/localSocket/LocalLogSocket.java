@@ -53,7 +53,7 @@ public class LocalLogSocket {
     
     
     public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
+    	if(this.userSession != null) this.userSession.getAsyncRemote().sendText(message);
     }
 
 }
