@@ -100,14 +100,11 @@ public class AgentCenter implements IAgentCenter {
 		String url = "http://" + masterNode.getAddress() + "/AgentiWAR/api/center/node";
 		ResteasyWebTarget master = restClient.target(url);
 		
-
 		Response response = master.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(this, MediaType.APPLICATION_JSON));
-		AgentCenter tmp = response.readEntity(new GenericType<AgentCenter>() {});
-		this.nodes = tmp.getNodes();
-		this.agents = tmp.getRunningAgents();
-		this.supportedTypes = tmp.getSupportedTypes();
+		
 		return true;
+
 	}
 	
 	@Override
@@ -204,34 +201,35 @@ public class AgentCenter implements IAgentCenter {
 		return null;
 	}
 
-	@Override
-	public void informNodes(AgentCenter newCenter)
-	{
-		if(!node.getAlias().equals("master"))
-		{
-			System.out.println("Only master can inform others");
-			return;
-		}
-		
-		restClient = new ResteasyClientBuilder().build();
-		for(Node n : nodes)
-		{
-			if(n.getAlias().equals("master") || n.getAlias().equals(newCenter.getNode().getAlias()))
-			{
-				continue;
-			}
-			
-			ResteasyWebTarget target = restClient.target("http://"+n.getAddress()+"/AgentiWAR/api/center/node");
-			Response response = target.request(MediaType.APPLICATION_JSON)
-					.post(Entity.entity(newCenter, MediaType.APPLICATION_JSON));
-		}
-		System.out.println("Nodes were informed about new member");
-	}
+//	@Override
+//	public void informNodes(AgentCenter newCenter)
+//	{
+//		if(!node.getAlias().equals("master"))
+//		{
+//			System.out.println("Only master can inform others");
+//			return;
+//		}
+//		
+//		restClient = new ResteasyClientBuilder().build();
+//		for(Node n : nodes)
+//		{
+//			if(n.getAlias().equals("master") || n.getAlias().equals(newCenter.getNode().getAlias()))
+//			{
+//				continue;
+//			}
+//			
+//			ResteasyWebTarget target = restClient.target("http://"+n.getAddress()+"/AgentiWAR/api/center/node");
+//			Response response = target.request(MediaType.APPLICATION_JSON)
+//					.post(Entity.entity(newCenter, MediaType.APPLICATION_JSON));
+//		}
+//		System.out.println("Nodes were informed about new member");
+//	}
 	
 	public Node getNode() {
 		return node;
 	}
 
+	@Override
 	public void setNode(Node node) {
 		this.node = node;
 	}
@@ -249,6 +247,7 @@ public class AgentCenter implements IAgentCenter {
 		return nodes;
 	}
 
+	@Override
 	public void setNodes(ArrayList<Node> nodes) {
 		this.nodes = nodes;
 	}
@@ -303,5 +302,15 @@ public class AgentCenter implements IAgentCenter {
 			agentAIDS.add(agent.getAid());
 		}
 		return agentAIDS;
+	}
+
+	@Override
+	public void setRunningAgents(List<IAgent> runningAgents) {
+		this.agents = runningAgents;
+	}
+
+	@Override
+	public void setSupportedTypes(HashMap<String, List<AgentType>> supportedTypes) {
+		this.supportedTypes = supportedTypes;
 	}
 }
