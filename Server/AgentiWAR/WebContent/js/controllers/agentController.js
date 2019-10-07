@@ -1,10 +1,11 @@
 app.controller('agentController', function($scope, agentService, messageService, $websocket) {
+	const ipAdress = window.location.host;
 	$scope.test = "John";
 	$scope.selectedSender = "";
 	agentService.getClasses().then(function(response) {
 		$scope.agentTypes = response.data;
 	});
-
+	
 	$scope.startAgent = function(agentType) {
 		if(agentType.agentName && agentType.agentName.trim().length != 0) {
 			agentService.startAgent(agentType.name, agentType.agentName).then(function(response) {
@@ -54,7 +55,7 @@ app.controller('agentController', function($scope, agentService, messageService,
 		});
 	}
 	
-	var dataStream = $websocket('ws://localhost:8080/AgentiWAR/runningAgents');
+	var dataStream = $websocket('ws://' + ipAdress + '/AgentiWAR/runningAgents');
 	
     dataStream.onMessage(function(response) {
     	$scope.runningAgents = JSON.parse(response.data);
@@ -63,7 +64,7 @@ app.controller('agentController', function($scope, agentService, messageService,
 		}	
     });
     
-    var logStream = $websocket('ws://localhost:8080/AgentiWAR/log');
+    var logStream = $websocket('ws://' + ipAdress + '/AgentiWAR/log');
     
     $scope.logs = [];
 	
