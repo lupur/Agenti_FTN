@@ -1,3 +1,13 @@
 /.metadata/
 Server/AgentiJAR/.classpath
 Server/AgentiWAR/.classpath
+Server/AgentiEAR/.settings
+Server/AgentiJAR/.setting
+Server/AgentiJAR/.classpath
+Server/AgentiJAR/.project
+Server/AgentiJAR/build/
+Server/AgentiWAR/.settings
+Server/AgentiWAR/build/
+Server/AgentiWAR/.classpath
+Server/AgentiWAR/.project
+Server/AgentiWAR/.tern-project
