@@ -7,7 +7,17 @@ import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+
+import com.google.gson.Gson;
+
+import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
 import jms.JMSQueue;
 import localSocket.LocalLogSocket;
@@ -60,7 +70,23 @@ public class AgentPing extends Agent {
 			response.setReceivers(receivers);
 			response.setConversationId(msg.getConversationId());
 			
-			new JMSQueue(response);
+			for(AID rec : response.getReceivers())
+			{
+				if(rec.getHost().getAddress().equals(agentCenter.getNode().getAddress()))
+				{
+					new JMSQueue(response);
+				}
+				else
+				{
+					//TODO http zahtev ka recv nodu POST/ACL_MSG
+					String URL = "http://" + rec.getHost().getAddress() + "/AgentiWAR/api/messages";
+					ResteasyClient client = new ResteasyClientBuilder().build();
+					ResteasyWebTarget target = client.target(URL);
+					Response r = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(new Gson().toJson(response), MediaType.APPLICATION_JSON));
+				}
+			}
+			
+			
 		}
 		else if(msg.getPerformative() == Performative.INFORM)
 		{

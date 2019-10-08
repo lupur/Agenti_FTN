@@ -52,7 +52,8 @@ public class AgentCenter implements IAgentCenter {
 	private Node node;
 	private Node masterNode;
 	private ArrayList<Node> nodes = new ArrayList<Node>();
-	private List<AID> agents = new ArrayList<AID>();
+	private List<AID> allAids = new ArrayList<AID>();
+	private List<IAgent> agents = new ArrayList<IAgent>();
 	private HashMap<String, List<AgentType>> supportedTypes = new HashMap<>();
 	
 	public AgentCenter() {};
@@ -152,7 +153,7 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public List<AID> getRunningAgents() {
-		return agents;
+		return allAids;
 	}
 
 	@Override
@@ -167,7 +168,7 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public void startServerAgent(AID aid, boolean replace) {
-		for(AID a : agents)
+		for(AID a : allAids)
 		{
 			if(a.equals(aid))
 			{
@@ -176,18 +177,32 @@ public class AgentCenter implements IAgentCenter {
 					throw new IllegalStateException("Agent already running: " + aid);
 				}
 				stopAgent(a.getStr());
-				agents.remove(a);
+				allAids.remove(a);
+				
 				System.out.println("Same agent deleted");
 				break;
 			}
 		}
+		
+		for(IAgent ag : agents)
+		{
+			if(ag.getAid().equals(aid))
+			{
+				agents.remove(ag);
+				break;
+			}
+		}
+		
 		IAgent agent = null;
 		try {
 			Context context = new InitialContext();
 			agent = (IAgent) context.lookup("java:global/AgentiEAR/AgentiJAR/" + aid.getType().getName());
 			
 			agent.init(aid);
-			agents.add(agent.getAid());
+			allAids.add(agent.getAid());
+			agents.add(agent);
+			
+			
 			System.out.println("Added agent " + agent.getAid().getStr());
 		} catch (NamingException ex) {
 			System.out.println("Context initialization error." + ex);
@@ -204,7 +219,7 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public boolean stopAgent(String agentID) {
-		for(AID aid : agents)
+		for(AID aid : allAids)
 		{
 			if(aid.getStr().equals(agentID))
 			{
@@ -213,7 +228,10 @@ public class AgentCenter implements IAgentCenter {
 					Context context = new InitialContext();
 					agent = (IAgent) context.lookup("java:global/AgentiEAR/AgentiJAR/" + aid.getType().getName());
 					agent.stop();
-					agents.remove(aid);
+					allAids.remove(aid);
+					
+					agents.remove(agent);
+					
 				} catch (NamingException ex) {
 					System.out.println("Context initialization error." + ex);
 				}
@@ -232,18 +250,11 @@ public class AgentCenter implements IAgentCenter {
 	@Override
 	public IAgent findAgent(AID aid)
 	{
-		for(AID a : agents)
+		for(IAgent a : agents)
 		{
-			if( a.equals(aid))
+			if( a.getAid().getStr().equals(aid.getStr()))
 			{
-				IAgent agent = null;
-				try {
-					Context context = new InitialContext();
-					agent = (IAgent) context.lookup("java:global/AgentiEAR/AgentiJAR/" + aid.getType().getName());
-					return agent;
-				} catch (NamingException ex) {
-					System.out.println("Context initialization error." + ex);
-				}
+				return a;
 			}			
 		}
 		return null;
@@ -310,11 +321,11 @@ public class AgentCenter implements IAgentCenter {
 	{
 		this.getSupportedTypes().remove(n.getAlias());
 		
-		for(AID a :  new ArrayList<AID>(agents))
+		for(AID a : new ArrayList<AID>(allAids))
 		{
 			if(a.getHost().equals(n.getAlias()))
 			{
-				agents.remove(a);
+				allAids.remove(a);
 			}
 		}
 		
@@ -344,7 +355,7 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public void setRunningAgents(List<AID> runningAgents) {
-		this.agents = runningAgents;
+		this.allAids = runningAgents;
 	}
 
 	@Override

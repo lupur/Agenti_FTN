@@ -47,16 +47,7 @@ public class JMSQueueListener implements MessageListener {
 						return;
 					}
 					System.out.println("Sending message to: " + agent.getAid().getStr());
-					agent.handleMessage(message);
-					
-				}
-				else
-				{
-					//TODO: Implement for cluster
-//					ResteasyClient client = new ResteasyClientBuilder().build();
-//					ResteasyWebTarget target = client.target("http://" + receiverAID.getHost().getAddress() +"/AgentiWAR/api/messages/");
-//					target.request(MediaType.APPLICATION_JSON).post(Entity.entity(message, MediaType.APPLICATION_JSON));
-
+					agent.handleMessage(message);	
 				}
 			}
 		}
