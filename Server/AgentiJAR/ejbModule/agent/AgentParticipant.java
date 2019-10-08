@@ -9,11 +9,20 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+
+import com.google.gson.Gson;
 
 import agentCenter.IAgentCenter;
+import jms.JMSQueue;
 import localSocket.LocalLogSocket;
 import message.ACLMessage;
-import message.IMessageManager;
 import message.Performative;
 
 @SuppressWarnings("serial")
@@ -23,15 +32,12 @@ public class AgentParticipant extends Agent {
 
 	@Override
 	public String toString() {
-		return "AgentParticipant [agentCenter=" + agentCenter + ", messageManager=" + messageManager + "]";
+		return "AgentParticipant [agentCenter=" + agentCenter + "]";
 	}
 
 	@EJB
 	IAgentCenter agentCenter;
-	
-	@EJB 
-	IMessageManager messageManager;
-	
+		
 	@Override
 	public void handleMessage(ACLMessage msg)
 	{
@@ -87,7 +93,22 @@ public class AgentParticipant extends Agent {
 			response.setPerformative(Performative.PROPOSE);
 		}
 		logger.sendMessage(message);
-		messageManager.post(response);
+		
+		for(AID rec : response.getReceivers())
+		{
+			if(rec.getHost().getAddress().equals(agentCenter.getNode().getAddress()))
+			{
+				new JMSQueue(response);
+			}
+			else
+			{
+				//TODO http zahtev ka recv nodu POST/ACL_MSG
+				String URL = "http://" + rec.getHost().getAddress() + "/AgentiWAR/api/messages";
+				ResteasyClient client = new ResteasyClientBuilder().build();
+				ResteasyWebTarget target = client.target(URL);
+				Response r = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(new Gson().toJson(response), MediaType.APPLICATION_JSON));
+			}
+		}
 	}
 	
 	private void handleRejectProposal(ACLMessage msg) {
@@ -133,6 +154,20 @@ public class AgentParticipant extends Agent {
 			
 		}
 		
-		messageManager.post(response);
+		for(AID rec : response.getReceivers())
+		{
+			if(rec.getHost().getAddress().equals(agentCenter.getNode().getAddress()))
+			{
+				new JMSQueue(response);
+			}
+			else
+			{
+				//TODO http zahtev ka recv nodu POST/ACL_MSG
+				String URL = "http://" + rec.getHost().getAddress() + "/AgentiWAR/api/messages";
+				ResteasyClient client = new ResteasyClientBuilder().build();
+				ResteasyWebTarget target = client.target(URL);
+				Response r = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(new Gson().toJson(response), MediaType.APPLICATION_JSON));
+			}
+		}
 	}
 }
