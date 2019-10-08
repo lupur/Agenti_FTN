@@ -27,6 +27,7 @@ import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
 import agentCenter.Node;
 import socket.RunningAgentsSocket;
+import util.JSON;
 
 @Path("/center")
 @Stateless
@@ -110,7 +111,7 @@ public class NodeController {
 		}
 		System.out.println("Node is updating all running agents");
 		agentCenter.setRunningAgents(runningAgentsList);
-		RunningAgentsSocket.sendRunningAgents(agentCenter.getRunningAgents().toString());
+		RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getRunningAgents()));
 		return Response.ok().build();		
 	}
 	

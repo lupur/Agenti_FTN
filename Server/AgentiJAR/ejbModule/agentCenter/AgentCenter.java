@@ -15,6 +15,7 @@ import javax.ejb.Remote;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -362,16 +363,21 @@ public class AgentCenter implements IAgentCenter {
 	@Override
 	public boolean registerRunningAgents() {
 		
-		javax.ws.rs.client.Client client = ClientBuilder.newClient();
+		Client client = ClientBuilder.newClient();
 		ResteasyClient restClient = new ResteasyClientBuilder().build();
 		List<AID> runningAgents = getRunningAgents();
 		
 		for(Node node : nodes) {
-			String url = "http://" + node.getAddress() + "/AgentiWAR/api/center/runningAgents";
+			if(node.equals(this.getNode()))
+			{
+				continue;
+			}
+			System.out.println("SHOULD send running agent on node: " + node.getAlias());
+			String url = "http://" + node.getAddress() + "/AgentiWAR/api/center/agents/running";
 			ResteasyWebTarget target = restClient.target(url);
 			Response response = target.request(MediaType.APPLICATION_JSON)
 					.post(Entity.entity(new Gson().toJson(runningAgents), MediaType.APPLICATION_JSON));
-			
+			System.out.println("GOT response: "+response.getStatus());
 		}
 		
 		return true;
