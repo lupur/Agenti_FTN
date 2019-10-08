@@ -8,7 +8,6 @@ import java.util.List;
 import agent.AgentType;
 import agent.IAgent;
 import agent.AID;
-import agent.Agent;
 
 public interface IAgentCenter extends Serializable {
 
@@ -23,6 +22,8 @@ public interface IAgentCenter extends Serializable {
 	public IAgent findAgent(AID aid);
 //	public void informNodes(AgentCenter newCenter);
 	public ArrayList<Node> getNodes();
+	public void putNode(Node node);
+	public void addSupportedType(String key, List<AgentType> value);
 	public void setNodes(ArrayList<Node> nodes);
 	public HashMap<String, List<AgentType>> getSupportedTypes();
 	public void setSupportedTypes(HashMap<String, List<AgentType>> supportedTypes);

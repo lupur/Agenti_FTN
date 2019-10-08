@@ -20,6 +20,11 @@ import sun.management.resources.agent_zh_CN;
 @Remote(IAgent.class)
 public class AgentPing extends Agent {
 
+	@Override
+	public String toString() {
+		return "AgentPing [agentCenter=" + agentCenter + "]";
+	}
+
 	@EJB
 	IAgentCenter agentCenter;
 	

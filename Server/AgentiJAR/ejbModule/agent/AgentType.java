@@ -39,9 +39,4 @@ public class AgentType implements Serializable {
 		this.module = module;
 	}
 	
-	@Override
-	public String toString()
-	{
-		return "Agent Type : { name:"+name+", module: "+module+ " }";
-	}
 }

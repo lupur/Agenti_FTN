@@ -47,6 +47,11 @@ public class Agent implements IAgent {
 		// TODO Auto-generated method stub
 		this.aid = aid;
 	}
+
+	@Override
+	public String toString() {
+		return "Agent [aid=" + aid + "]";
+	}
 	
 	
 }

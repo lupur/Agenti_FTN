@@ -10,10 +10,12 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.json.Json;
 import javax.ejb.Remote;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -22,6 +24,8 @@ import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+
+import com.google.gson.Gson;
 
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -48,8 +52,6 @@ public class AgentCenter implements IAgentCenter {
 	private Node node;
 	private Node masterNode;
 	private ArrayList<Node> nodes = new ArrayList<Node>();
-	ResteasyClient restClient = new ResteasyClientBuilder().build();
-	
 	private List<IAgent> agents = new ArrayList<IAgent>();
 	private HashMap<String, List<AgentType>> supportedTypes = new HashMap<>();
 	
@@ -96,13 +98,45 @@ public class AgentCenter implements IAgentCenter {
 	public boolean registerNode()
 	{
 		supportedTypes.put(node.getAlias(), getAvailableAgentClasses());
-
+		
+		javax.ws.rs.client.Client client = ClientBuilder.newClient();
+		
+		ResteasyClient restClient = new ResteasyClientBuilder().build();
+		AgentCenterDTO acDto = new AgentCenterDTO(this);
 		String url = "http://" + masterNode.getAddress() + "/AgentiWAR/api/center/node";
 		ResteasyWebTarget master = restClient.target(url);
 		
-		Response response = master.request(MediaType.APPLICATION_JSON)
-				.post(Entity.entity(this, MediaType.APPLICATION_JSON));
+		System.out.println("Sending registartion to master");
 		
+		Response response = null;
+		
+		
+		
+		Thread t1 = new Thread(new Runnable() {
+		    @Override
+		    public void run() {
+		        // code goes here.
+		    	Response response = master.request(MediaType.APPLICATION_JSON)
+						.post(Entity.entity(new Gson().toJson(acDto), MediaType.APPLICATION_JSON));
+		    	
+		    	return;		    	
+		    }
+		});  
+		t1.start();
+		
+//		AgentCenterDTO responseAC = new Gson().fromJson((String) response.readEntity(String.class), AgentCenterDTO.class);
+//		
+//		if(responseAC.isValid())
+//		{
+//			agents = responseAC.getAgents();
+//			nodes = responseAC.getNodes();
+//			responseAC.getAvailableAgentClasses();
+//			supportedTypes = responseAC.getSupportedTypes();
+//			
+//		}
+		
+//		System.out.println("Response from registration: "+ responseAC.toString());
+		System.out.println("Finished registartion");
 		return true;
 
 	}
@@ -285,7 +319,7 @@ public class AgentCenter implements IAgentCenter {
 		{
 			if(tmp.getAlias().equals("master") || n.getAlias().equals(n.getAlias()))
 				continue;
-			
+			ResteasyClient restClient = new ResteasyClientBuilder().build();
 			ResteasyWebTarget target = restClient.target("http://" + tmp.getAddress() +"/AgentiWAR/api/center/node/" + n.getAlias());
             Response response = target.request().delete();
 
@@ -312,5 +346,17 @@ public class AgentCenter implements IAgentCenter {
 	@Override
 	public void setSupportedTypes(HashMap<String, List<AgentType>> supportedTypes) {
 		this.supportedTypes = supportedTypes;
+	}
+
+	@Override
+	public void putNode(Node node) {
+		// TODO Auto-generated method stub
+		this.nodes.add(node);
+	}
+
+	@Override
+	public void addSupportedType(String key, List<AgentType> value) {
+		// TODO Auto-generated method stub
+		supportedTypes.put(key, value);
 	}
 }

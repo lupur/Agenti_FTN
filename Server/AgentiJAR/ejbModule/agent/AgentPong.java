@@ -18,6 +18,11 @@ import message.Performative;
 @Remote(IAgent.class)
 public class AgentPong extends Agent {
 
+	@Override
+	public String toString() {
+		return "AgentPong [agentCenter=" + agentCenter + "]";
+	}
+
 	@EJB
 	IAgentCenter agentCenter;
 	

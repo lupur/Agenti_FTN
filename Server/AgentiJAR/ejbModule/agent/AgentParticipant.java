@@ -21,6 +21,11 @@ import message.Performative;
 @Remote(IAgent.class)
 public class AgentParticipant extends Agent {
 
+	@Override
+	public String toString() {
+		return "AgentParticipant [agentCenter=" + agentCenter + ", messageManager=" + messageManager + "]";
+	}
+
 	@EJB
 	IAgentCenter agentCenter;
 	
