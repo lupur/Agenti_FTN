@@ -70,6 +70,8 @@ public class AgentController {
 		agentCenter.startServerAgent(agentType, name);
 		
 		RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getRunningAgents()));
+//		agentCenter.registerRunningAgents();
+		
 		return Response.ok().build();
 	}
 	

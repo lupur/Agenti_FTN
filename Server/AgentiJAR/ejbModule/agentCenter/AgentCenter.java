@@ -107,11 +107,7 @@ public class AgentCenter implements IAgentCenter {
 		ResteasyWebTarget master = restClient.target(url);
 		
 		System.out.println("Sending registartion to master");
-		
-		Response response = null;
-		
-		
-		
+
 		Thread t1 = new Thread(new Runnable() {
 		    @Override
 		    public void run() {
@@ -123,19 +119,7 @@ public class AgentCenter implements IAgentCenter {
 		    }
 		});  
 		t1.start();
-		
-//		AgentCenterDTO responseAC = new Gson().fromJson((String) response.readEntity(String.class), AgentCenterDTO.class);
-//		
-//		if(responseAC.isValid())
-//		{
-//			agents = responseAC.getAgents();
-//			nodes = responseAC.getNodes();
-//			responseAC.getAvailableAgentClasses();
-//			supportedTypes = responseAC.getSupportedTypes();
-//			
-//		}
-		
-//		System.out.println("Response from registration: "+ responseAC.toString());
+	
 		System.out.println("Finished registartion");
 		return true;
 
@@ -362,6 +346,24 @@ public class AgentCenter implements IAgentCenter {
 	public void addSupportedType(String key, List<AgentType> value) {
 		// TODO Auto-generated method stub
 		supportedTypes.put(key, value);
+	}
+	
+	@Override
+	public boolean registerRunningAgents() {
+		
+		javax.ws.rs.client.Client client = ClientBuilder.newClient();
+		ResteasyClient restClient = new ResteasyClientBuilder().build();
+		List<AID> runningAgents = getRunningAgents();
+		
+		for(Node node : nodes) {
+			String url = "http://" + node.getAddress() + "/AgentiWAR/api/center/runningAgents";
+			ResteasyWebTarget target = restClient.target(url);
+			Response response = target.request(MediaType.APPLICATION_JSON)
+					.post(Entity.entity(new Gson().toJson(runningAgents), MediaType.APPLICATION_JSON));
+			
+		}
+		
+		return true;
 	}
 
 }
