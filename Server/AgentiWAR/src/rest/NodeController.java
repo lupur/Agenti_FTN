@@ -21,15 +21,12 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
-import agent.Agent;
-import agent.IAgent;
+import agent.AID;
 import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
 import agentCenter.Node;
 import socket.RunningAgentsSocket;
-import util.JSON;
 
 @Path("/center")
 @Stateless
@@ -70,7 +67,7 @@ public class NodeController {
 			System.out.println("Master node should register new slave");
 			agentCenter.addSupportedType(acDto.getNode().getAlias(), acDto.getAvailableAgentClasses());
 			
-//			updateNewNode(acDto.getNode().getAddress());
+			updateNewNode(acDto.getNode().getAddress());
 			
 			agentCenter.putNode(acDto.getNode());
 			updateNodes();
@@ -98,10 +95,10 @@ public class NodeController {
 		}
 		
 		Gson gson = new Gson();
-		List<IAgent> runningAgentsList = new ArrayList<IAgent>();
+		List<AID> runningAgentsList = new ArrayList<AID>();
 		try
 		{
-			runningAgentsList = gson.fromJson(runningAgents, new TypeToken<List<IAgent>>(){}.getType());
+			runningAgentsList = gson.fromJson(runningAgents, new TypeToken<List<AID>>(){}.getType());
 		} catch (Exception e) {
 			System.out.println("[POST/agents/running/]Wrong body format.");
 			return Response.status(400).build();
@@ -113,7 +110,7 @@ public class NodeController {
 		}
 		System.out.println("Node is updating all running agents");
 		agentCenter.setRunningAgents(runningAgentsList);
-		RunningAgentsSocket.sendRunningAgents(agentCenter.getAIDSFromRunningAgents().toString());
+		RunningAgentsSocket.sendRunningAgents(agentCenter.getRunningAgents().toString());
 		return Response.ok().build();		
 	}
 	

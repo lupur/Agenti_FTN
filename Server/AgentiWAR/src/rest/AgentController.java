@@ -55,7 +55,7 @@ public class AgentController {
 	public Response getRunningAgents()
 	{
 		System.out.println("*****************");
-		List<AID> aids = agentCenter.getAIDSFromRunningAgents();
+		List<AID> aids = agentCenter.getRunningAgents();
 		System.out.println(aids.size());
 
 		return Response.ok(aids).build();
@@ -69,7 +69,7 @@ public class AgentController {
 		AgentType agentType = agentCenter.getAgentTypeByName(type);
 		agentCenter.startServerAgent(agentType, name);
 		
-		RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getAIDSFromRunningAgents()));
+		RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getRunningAgents()));
 		return Response.ok().build();
 	}
 	
@@ -80,7 +80,7 @@ public class AgentController {
 	{
 		if(agentCenter.stopAgent(agentID))
 		{
-			RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getAIDSFromRunningAgents()));
+			RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getRunningAgents()));
 			return Response.ok().build();
 		}
 		return Response.status(404).build();

@@ -73,11 +73,11 @@ public class AgentPing extends Agent {
 	private AID getRandomPong()
 	{
 		ArrayList<AID> pongs = new ArrayList<AID>();
-		for(IAgent agent : agentCenter.getRunningAgents())
+		for(AID agent : agentCenter.getRunningAgents())
 		{
-			if(agent.getAid().getType().getName().equals(AgentPong.class.getSimpleName()))
+			if(agent.getType().getName().equals(AgentPong.class.getSimpleName()))
 			{
-				pongs.add(agent.getAid());
+				pongs.add(agent);
 			}
 		}
 		if(pongs.size() == 0)

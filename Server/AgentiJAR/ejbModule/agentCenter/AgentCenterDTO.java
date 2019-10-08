@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import agent.AID;
 import agent.AgentType;
 import agent.IAgent;
 
@@ -12,7 +13,7 @@ import agent.IAgent;
 public class AgentCenterDTO implements Serializable {
 	
 	private ArrayList<Node> nodes = new ArrayList<Node>();
-	private List<IAgent> agents = new ArrayList<IAgent>();
+	private List<AID> agents = new ArrayList<AID>();
 	private HashMap<String, List<AgentType>> supportedTypes = new HashMap<>();
 	private List<AgentType> availableClasses = new ArrayList<>();
 	private Node node = new Node();
@@ -28,7 +29,7 @@ public class AgentCenterDTO implements Serializable {
 	public ArrayList<Node> getNodes() {
 		return nodes;
 	}
-	public List<IAgent> getAgents() {
+	public List<AID> getAgents() {
 		return agents;
 	}
 	public HashMap<String, List<AgentType>> getSupportedTypes() {

@@ -153,12 +153,12 @@ public class AgentInitiator extends Agent {
 	private ArrayList<AID> getParticipants()
 	{
 		ArrayList<AID> participants = new ArrayList<AID>();
-		for(IAgent agent: agentCenter.getRunningAgents())
+		for(AID agent: agentCenter.getRunningAgents())
 		{
 			String participantName = AgentParticipant.class.getSimpleName();
-			if(agent.getAid().getType().getName().equals(participantName))
+			if(agent.getType().getName().equals(participantName))
 			{
-				participants.add(agent.getAid());	
+				participants.add(agent);	
 			}
 					}
 		return participants;

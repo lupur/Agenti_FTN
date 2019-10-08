@@ -12,8 +12,8 @@ import agent.AID;
 public interface IAgentCenter extends Serializable {
 
 	public List<AgentType> getAvailableAgentClasses();
-	public List<IAgent> getRunningAgents();
-	public void setRunningAgents(List<IAgent> runningAgents);
+	public List<AID> getRunningAgents();
+	public void setRunningAgents(List<AID> runningAgents);
 	public void startServerAgent(AID aid, boolean replace);
 	public AID startServerAgent(AgentType agType, String runtimeName);
 	public boolean stopAgent(String agentID);
@@ -31,6 +31,5 @@ public interface IAgentCenter extends Serializable {
 	public void setNode(Node node);
 	public void deleteNodeFromAll(Node n);
 	public void deleteNode(Node n);
-	public List<AID> getAIDSFromRunningAgents();
 
 }
