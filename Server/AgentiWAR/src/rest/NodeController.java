@@ -190,9 +190,11 @@ public class NodeController {
 	@Path("/node")
 	public Response checkHealth() {
 		if(agentCenter.getNode() != null && agentCenter.getNode().getAlias().equals("slave1")) {
+			String exNodeAlias = agentCenter.getNode().getAlias();
 			Random r = new Random();
 			if(r.nextInt(19)%13==0) {
-				agentCenter.setNode(null);
+//				agentCenter.setNode(null);
+				System.out.println("node inactivated: " + exNodeAlias);
 			}
 		}
 		try {
