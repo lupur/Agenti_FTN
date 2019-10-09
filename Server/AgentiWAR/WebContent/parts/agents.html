@@ -1,9 +1,9 @@
 <div ng-controller="agentController">
 <div class="modal-body row">
-  <div class="col-md-6">
-    <table class="table">
+  <div style="width:50%; float: left;" class="col-md-6">
+    <table style="align-content: center;" class="table">
     	<caption style="caption-side: top; text-align: center; font-weight: bold;" class="bg-dark text-white">Agent Types</caption>
-		<thead class="thead-dark">
+		<thead "class="thead-dark">
 			<th scope="col">#</th>
 			<th scope="col">Type Name</th>
       		<th scope="col">Type Module</th>
@@ -25,7 +25,7 @@
   		</tr>
   		</form>
 	</table>
-	<table class="table">
+	<table style="table-layout: fixed; width:100%; word-wrap: break-word; align-content: center;" class="table">
     	<caption style="caption-side: top; text-align: center; font-weight: bold;" class="bg-dark text-white">Running Agents</caption>
 		<thead class="thead-dark">
 			<th scope="col">#</th>
@@ -51,8 +51,8 @@
 	</table>
   </div>
   <br/>
-  <div class="col-md-6">
-  	<table class="table" style="position: relative; height: 70%; overflow: auto; display: block;">
+  <div style="width:50%; float: right;" class="col-md-6">
+  	<table class="table" style="width:100%" height: 70%; overflow: auto; display: block;">
     	<caption style="caption-side: top; text-align: center; font-weight: bold;" class="bg-dark text-white">Messages</caption>
     	<tr ng-repeat="log in logs.slice().reverse() track by $index">
     		<td>{{log}}</td>
