@@ -32,5 +32,6 @@ public interface IAgentCenter extends Serializable {
 	public void deleteNodeFromAll(Node n);
 	public void deleteNode(Node n);
 	public boolean registerRunningAgents();
+	public void heartBeat();
 
 }

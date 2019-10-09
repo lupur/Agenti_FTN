@@ -2,11 +2,13 @@ package rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -151,6 +153,23 @@ public class NodeController {
 		
 		LogSocket.sendLog(message);
 		return Response.ok().build();		
+	}
+	
+	@GET
+	@Path("/node")
+	public Response checkHealth() {
+		if(agentCenter.getNode() != null && agentCenter.getNode().getAlias().equals("slave1")) {
+			Random r = new Random();
+			if(r.nextInt(19)%13==0) {
+				agentCenter.setNode(null);
+			}
+		}
+		try {
+			agentCenter.getNode().getAddress();
+			return Response.ok().build();
+		} catch(Exception e) {
+			return Response.serverError().build();
+		}	
 	}
 	
 	private void updateNodes() {

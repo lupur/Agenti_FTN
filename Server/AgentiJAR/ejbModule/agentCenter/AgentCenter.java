@@ -12,6 +12,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.json.Json;
 import javax.ejb.Remote;
+import javax.ejb.Schedule;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -21,6 +22,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -94,7 +96,22 @@ public class AgentCenter implements IAgentCenter {
 			System.out.println("Slave node has been created.");
 			registerNode();
 		}
-		
+		Thread t1 = new Thread(new Runnable() {
+		    @Override
+		    public void run() {
+		        // code goes here.
+		    	while(true) {
+		    		try {
+		    			heartBeat();
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    	}	    	
+		    }
+		});  
+		t1.start();
 	}
 	
 	public boolean registerNode()
@@ -380,5 +397,25 @@ public class AgentCenter implements IAgentCenter {
 		
 		return true;
 	}
+
+	@Override
+	public void heartBeat() {
+		Client client = ClientBuilder.newClient();
+		ResteasyClient restClient = new ResteasyClientBuilder().build();
+		for(Node node : nodes) {
+			String url = "http://" + node.getAddress() + "/AgentiWAR/api/center/node";
+			ResteasyWebTarget target = restClient.target(url);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if(response.getStatus()== 500) {
+				System.out.println("GOT 500 First time!");
+				response = target.request(MediaType.APPLICATION_JSON).get();
+				if(response.getStatus()== 500) {
+					System.out.println("GOT 500 Second time!");
+				}
+			} 
+		}
+	}
+	
+	
 
 }

@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 
 import agentCenter.IAgentCenter;
 import jms.JMSQueue;
-import localSocket.LocalLogSocket;
 import message.ACLMessage;
 import message.Performative;
 

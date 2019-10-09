@@ -21,7 +21,6 @@ import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
 import agentCenter.Node;
 import jms.JMSQueue;
-import localSocket.LocalLogSocket;
 import message.ACLMessage;
 import message.Performative;
 
