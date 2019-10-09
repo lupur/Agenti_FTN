@@ -23,9 +23,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import agent.AID;
+import agent.AgentType;
 import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
 import agentCenter.Node;
+import socket.AgentClassesSocket;
 import socket.LogSocket;
 import socket.RunningAgentsSocket;
 import util.JSON;
@@ -82,6 +84,19 @@ public class NodeController {
 			
 		}
 
+		List<AgentType> allAgentTypes = new ArrayList<>();
+		for(List<AgentType> supportedTypes : agentCenter.getSupportedTypes().values()) {
+			for(int i=0; i<supportedTypes.size(); i++) {
+				AgentType supportedType = supportedTypes.get(i);
+				if(!allAgentTypes.stream().filter(
+						agentType -> agentType.getModule().equals(supportedType.getModule()) && agentType.getName().equals(supportedType.getName()))
+						.findFirst().isPresent()) {
+					allAgentTypes.add(supportedTypes.get(i));
+				}
+			}
+		}
+		AgentClassesSocket.sendAvailableAgentClasses(JSON.g.toJson(allAgentTypes));
+		
 		return Response.ok().build();
 
 	}
@@ -120,11 +135,12 @@ public class NodeController {
 	@Path("/node/{alias}")
 	public Response deleteNode(@PathParam("alias") String alias)
 	{
+		System.out.println("Got request to delete");
 		Node del = null;
 
 		for(Node n : agentCenter.getNodes())
 		{
-			if(n.getAddress().equals(alias))
+			if(n.getAlias().equals(alias))
 			{
 				del = n;
 			}
@@ -140,6 +156,21 @@ public class NodeController {
 			agentCenter.deleteNodeFromAll(del);
 		}
 		agentCenter.deleteNode(del);
+		
+		List<AgentType> allAgentTypes = new ArrayList<>();
+		for(List<AgentType> supportedTypes : agentCenter.getSupportedTypes().values()) {
+			for(int i=0; i<supportedTypes.size(); i++) {
+				AgentType supportedType = supportedTypes.get(i);
+				if(!allAgentTypes.stream().filter(
+						agentType -> agentType.getModule().equals(supportedType.getModule()) && agentType.getName().equals(supportedType.getName()))
+						.findFirst().isPresent()) {
+					allAgentTypes.add(supportedTypes.get(i));
+				}
+			}
+		}
+		AgentClassesSocket.sendAvailableAgentClasses(JSON.g.toJson(allAgentTypes));
+		
+		RunningAgentsSocket.sendRunningAgents(JSON.g.toJson(agentCenter.getRunningAgents()));
 		
 		return Response.status(200).build();
 	}
