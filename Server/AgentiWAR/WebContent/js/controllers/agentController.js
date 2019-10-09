@@ -64,6 +64,15 @@ app.controller('agentController', function($scope, agentService, messageService,
 		}	
     });
     
+	var agentClasses = $websocket('ws://' + ipAdress + '/AgentiWAR/agentClasses');
+	
+	agentClasses.onMessage(function(response) {
+    	$scope.agentTypes = JSON.parse(response.data);
+    	if(!$scope.$$phase) {
+			$scope.$apply();
+		}	
+    });
+    
     var logStream = $websocket('ws://' + ipAdress + '/AgentiWAR/log');
     
     $scope.logs = [];

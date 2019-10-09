@@ -41,6 +41,8 @@ public class AgentClassesSocket {
 		{
 			if(s.isOpen())
 			{
+				System.out.println("Sending available agent classes");
+
 				s.getAsyncRemote().sendText(message);
 			}
 		}

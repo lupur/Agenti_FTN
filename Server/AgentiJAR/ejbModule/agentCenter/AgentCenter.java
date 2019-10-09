@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.AccessTimeout;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -321,17 +322,26 @@ public class AgentCenter implements IAgentCenter {
 	@Override
 	public void deleteNode(Node n)
 	{
+		System.out.print("Starting deleting node : " + n.getAlias());
 		this.getSupportedTypes().remove(n.getAlias());
 		
 		for(AID a : new ArrayList<AID>(allAids))
 		{
-			if(a.getHost().equals(n.getAlias()))
+			if(a.getHost().getAlias().equals(n.getAlias()))
 			{
 				allAids.remove(a);
 			}
 		}
+		for(IAgent a: new ArrayList<IAgent>(agents))
+		{
+			if(a.getAid().getHost().getAlias().equals(n.getAlias()))
+			{
+				agents.remove(a);
+			}
+		}
 		
 		nodes.remove(n);
+		System.out.print("Finished deleting node : " + n.getAlias());
 	}
 	
 	@Override
@@ -344,16 +354,34 @@ public class AgentCenter implements IAgentCenter {
 		
 		for(Node tmp : nodes)
 		{
-			if(tmp.getAlias().equals("master") || n.getAlias().equals(n.getAlias()))
+			if(tmp.getAlias().equals("master") || n.getAlias().equals(tmp.getAlias()))
 				continue;
 			ResteasyClient restClient = new ResteasyClientBuilder().build();
-			ResteasyWebTarget target = restClient.target("http://" + tmp.getAddress() +"/AgentiWAR/api/center/node/" + n.getAlias());
-            Response response = target.request().delete();
-
+			String url = "http://" + tmp.getAddress() +"/AgentiWAR/api/center/node/" + n.getAlias();
+			ResteasyWebTarget target = restClient.target(url);
+           System.out.println("SHOULD INFORM : " + url);
+			Response response = target.request().delete();
 		}
-	
 	}
 	
+	@PreDestroy
+	public void onDestroy()
+	{
+		System.out.println("Starting node deletion");
+		
+    	ResteasyClient restClient = new ResteasyClientBuilder().build();
+    	String url = "http://" + masterNode.getAddress() +"/AgentiWAR/api/center/node/" + node.getAlias();
+		ResteasyWebTarget target = restClient.target(url);
+		System.out.println("Deleting request: "+ url);
+        Response response = target.request().delete();
+		System.out.println("Result of the deletion repsonse: " + response.getStatus());
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void setRunningAgents(List<AID> runningAgents) {
@@ -415,7 +443,4 @@ public class AgentCenter implements IAgentCenter {
 			} 
 		}
 	}
-	
-	
-
 }
