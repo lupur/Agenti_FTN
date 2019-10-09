@@ -14,7 +14,6 @@ public class Node implements Serializable {
 			
 	public Node() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setAlias(String alias) {

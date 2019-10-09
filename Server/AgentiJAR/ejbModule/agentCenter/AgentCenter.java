@@ -350,13 +350,11 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public void putNode(Node node) {
-		// TODO Auto-generated method stub
 		this.nodes.add(node);
 	}
 
 	@Override
 	public void addSupportedType(String key, List<AgentType> value) {
-		// TODO Auto-generated method stub
 		supportedTypes.put(key, value);
 	}
 	

@@ -41,7 +41,6 @@ public class AgentPong extends Agent {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(msg.getPerformative() == Performative.REQUEST)
@@ -55,8 +54,7 @@ public class AgentPong extends Agent {
 			response.setConversationId(msg.getConversationId());
 			String message = "["+this.getAid().getStr()+"] : Received message from: " + msg.getSender().getStr();
 			message +=". Sending a response...";
-			LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-			logger.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			for(AID rec : response.getReceivers())
 			{
 				if(rec.getHost().getAddress().equals(agentCenter.getNode().getAddress()))

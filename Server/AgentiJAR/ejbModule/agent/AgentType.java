@@ -10,7 +10,6 @@ public class AgentType implements Serializable {
 		
 	public AgentType() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public AgentType(String module, String name) {

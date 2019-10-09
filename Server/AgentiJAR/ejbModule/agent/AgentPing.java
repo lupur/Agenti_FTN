@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
+import agentCenter.Node;
 import jms.JMSQueue;
 import localSocket.LocalLogSocket;
 import message.ACLMessage;
@@ -44,7 +45,6 @@ public class AgentPing extends Agent {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(msg.getPerformative() == Performative.REQUEST)
@@ -53,15 +53,13 @@ public class AgentPing extends Agent {
 			if(receiver == null)
 			{
 				String message = "[" + this.getAid().getStr() +"]: " + "No pongs to receive a message, exiting.";
-				LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-				logger.sendMessage(message);
+				super.sendLogs(message, agentCenter.getNodes());
 				return;
 			}
 			
 			String message = "[" + this.getAid().getStr() +"]: " +
 					"Sending PING to: " +receiver.getStr();
-			LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-			logger.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			ACLMessage response = new ACLMessage();
 			response.setPerformative(Performative.REQUEST);
 			response.setSender(this.getAid());
@@ -91,8 +89,7 @@ public class AgentPing extends Agent {
 		else if(msg.getPerformative() == Performative.INFORM)
 		{
 			String message = "["+this.getAid().getStr()+"] : Received response from: " + msg.getSender().getStr();
-			LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-			logger.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 		}
 	}
 	

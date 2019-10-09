@@ -31,8 +31,7 @@ public class LogSocket {
 	
 	@OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println("onMessage::From=" + session.getId() + " Message=" + message);
-        sendLog(message);
+
     }
     
 	public static void sendLog(String message)

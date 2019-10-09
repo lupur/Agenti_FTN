@@ -9,8 +9,10 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -87,9 +89,8 @@ public class AgentController {
 		return Response.ok(aids).build();
 	}
 	
-	@PUT
 	@Path("/running/{type}/{name}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@POST
 	public Response startAgent(@PathParam("type") String type, @PathParam("name") String name)
 	{
 		
@@ -101,16 +102,17 @@ public class AgentController {
 					if(supportedType.getName().equals(type)) {
 						for(Node node : agentCenter.getNodes()) {
 							if(node.getAlias().equals(entry.getKey())) {
-								System.out.println(entry.getKey());
+								System.out.println(entry.getKey() + " - " + node.getAddress());
 								
 								Client client = ClientBuilder.newClient();
 								
 								ResteasyClient restClient = new ResteasyClientBuilder().build();
-								String url = "http://" + node.getAddress() + "/running/" + type + "/" + name;
+								String url = "http://" + node.getAddress() + "/AgentiWAR/api/agents/running/" + type + "/" + name;
+								System.out.println("URL : " + url);
 								ResteasyWebTarget target = restClient.target(url);
 								
-								// TODO: Fix this
-								Response response = target.request().put(Entity.json(""));
+//								// TODO: Fix this
+								Response response = target.request().post(null);
 								
 								return response;
 							}

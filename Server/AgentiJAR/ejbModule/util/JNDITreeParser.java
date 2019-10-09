@@ -33,7 +33,6 @@ public class JNDITreeParser {
 		try {
 			context =  new InitialContext(jndiProps);
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			context = null;
 		}

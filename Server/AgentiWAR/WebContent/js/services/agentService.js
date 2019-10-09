@@ -17,7 +17,7 @@ app.factory('agentService', function($http) {
         },
         startAgent: function(type, name) {
         	return $http({
-        		method: 'PUT',
+        		method: 'POST',
         		url: 'api/agents/running/' + type + '/' + name
         	});
         },

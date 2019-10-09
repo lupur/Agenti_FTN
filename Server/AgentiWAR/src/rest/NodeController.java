@@ -26,6 +26,7 @@ import agent.AID;
 import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
 import agentCenter.Node;
+import socket.LogSocket;
 import socket.RunningAgentsSocket;
 import util.JSON;
 
@@ -141,6 +142,15 @@ public class NodeController {
 		agentCenter.deleteNode(del);
 		
 		return Response.status(200).build();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/log")
+	public Response updateLogSocket(String message) {
+		
+		LogSocket.sendLog(message);
+		return Response.ok().build();		
 	}
 	
 	private void updateNodes() {

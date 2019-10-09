@@ -1,4 +1,7 @@
+master;localhost:8080;this
 slave1;localhost:8280;localhost:8080
+
+
 
 
 slave1;localhost:8180;localhost:8080

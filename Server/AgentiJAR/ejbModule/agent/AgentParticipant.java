@@ -44,7 +44,6 @@ public class AgentParticipant extends Agent {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		switch (msg.getPerformative()) {
@@ -68,8 +67,7 @@ public class AgentParticipant extends Agent {
 	{
 		String message = "[" + this.getAid().getStr() +"]: \n" +
 					"Call for proposal from: " + msg.getSender().getStr();
-		LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-		logger.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 		ACLMessage response = new ACLMessage();
 		response.setSender(this.getAid());
 		
@@ -92,7 +90,7 @@ public class AgentParticipant extends Agent {
 						+ "Decided to participate.";
 			response.setPerformative(Performative.PROPOSE);
 		}
-		logger.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 		
 		for(AID rec : response.getReceivers())
 		{
@@ -115,17 +113,14 @@ public class AgentParticipant extends Agent {
 		String message = "[" + this.getAid().getStr() +"]: \n" +
 						"Proposal rejected by " + msg.getSender().getStr();
 		
-		LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-		logger.sendMessage(message);
-		
+		super.sendLogs(message, agentCenter.getNodes());
 	}
 	
 	private void doWork(ACLMessage msg)
 	{
 		String message = "[" + this.getAid().getStr() +"]: \n" +
 						"Doing some work for: " + msg.getSender().getStr();
-		LocalLogSocket logger = new LocalLogSocket(agentCenter.getAddress());
-		logger.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 		ACLMessage response = new ACLMessage();
 		response.setSender(this.getAid());
 		
@@ -139,7 +134,7 @@ public class AgentParticipant extends Agent {
 		{
 			message = "[" + this.getAid().getStr() +"]: \n" +
 							"Failed to finish the job for: " + msg.getSender().getStr();
-			logger.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			response.setPerformative(Performative.FAILURE);
 			response.setContent("Could not finish the task.");
 		}
@@ -148,7 +143,7 @@ public class AgentParticipant extends Agent {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			message = "[" + this.getAid().getStr() +"]: \n" +
 					"Finished the job for: " + msg.getSender().getStr();
-			logger.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			response.setPerformative(Performative.INFORM);
 			response.setContent("Finish the task at: " + formatter.format(date));
 			

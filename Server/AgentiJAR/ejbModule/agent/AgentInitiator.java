@@ -17,7 +17,9 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import com.google.gson.Gson;
 
+import agentCenter.AgentCenterDTO;
 import agentCenter.IAgentCenter;
+import agentCenter.Node;
 import jms.JMSQueue;
 import localSocket.LocalLogSocket;
 import message.ACLMessage;
@@ -44,7 +46,6 @@ public class AgentInitiator extends Agent {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		switch(msg.getPerformative())
@@ -80,15 +81,13 @@ public class AgentInitiator extends Agent {
 			String message = "[" + this.getAid().getStr() +"]: ";
 			message += "\nNo active participants to initiate contract.";
 			System.out.print(message);
-			LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
-			socket.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			return;
 		}
 		String message = "[" + this.getAid().getStr() +"]: ";
 		message += "Sending proposal to participants:\n" + participants.toString();
 		System.out.print(message);
-		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
-		socket.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 		ACLMessage response = new ACLMessage();
 		response.setPerformative(Performative.CALL_FOR_PROPOSAL);
 		response.setReceivers(participants);
@@ -116,8 +115,7 @@ public class AgentInitiator extends Agent {
 		String message = "[" + this.getAid().getStr() +"]: \n" + 
 						"Received proposal from: " + msg.getSender().getStr();
 		System.out.print(message);
-		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
-		socket.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 		
 		ACLMessage response = new ACLMessage();
 		List<AID> recv = new ArrayList<AID>();
@@ -132,7 +130,7 @@ public class AgentInitiator extends Agent {
 			message = "[" + this.getAid().getStr() +"]: \n" +
 					"Rejecting proposal from: " + msg.getSender().getStr();
 			System.out.print(message);
-			socket.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			response.setPerformative(Performative.REJECT_PROPOSAL);
 		}
 		else
@@ -140,7 +138,7 @@ public class AgentInitiator extends Agent {
 			message = "[" + this.getAid().getStr() +"]: " +
 						"Acceptiong proposal from: " + msg.getSender().getStr();
 			System.out.println(message);
-			socket.sendMessage(message);
+			super.sendLogs(message, agentCenter.getNodes());
 			response.setPerformative(Performative.ACCEPT_PROPOSAL);
 		}
 		
@@ -166,24 +164,21 @@ public class AgentInitiator extends Agent {
 	{
 		String message = "[" + this.getAid().getStr() +"]: \n" +
 					msg.getSender().getStr() + " refused proposal.";
-		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
-		socket.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 	}
 	
 	private void handleInform(ACLMessage msg)
 	{
 		String message = "[" + this.getAid().getStr() +"]: \n"+
 					"From: " + msg.getSender().getStr() + " received info: "+ msg.getContent();
-		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
-		socket.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 	}
 	
 	public void handleFailure(ACLMessage msg)
 	{
 		String message = "[" + this.getAid().getStr() +"]: \n" +
 					msg.getSender().getStr() + " failed.";
-		LocalLogSocket socket = new LocalLogSocket(agentCenter.getAddress());
-		socket.sendMessage(message);
+		super.sendLogs(message, agentCenter.getNodes());
 	}
 	
 	private ArrayList<AID> getParticipants()
@@ -199,4 +194,6 @@ public class AgentInitiator extends Agent {
 					}
 		return participants;
 	}
+	
+
 }
