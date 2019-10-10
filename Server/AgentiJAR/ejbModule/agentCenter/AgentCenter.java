@@ -3,6 +3,7 @@ package agentCenter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -63,6 +64,7 @@ public class AgentCenter implements IAgentCenter {
 	public AgentCenter() {};
 	
 	private Thread heartBeatThread = null;
+	private final ReentrantLock nodesLock = new ReentrantLock();
 	
 	@PostConstruct
 	public void Init()
@@ -105,7 +107,9 @@ public class AgentCenter implements IAgentCenter {
 		        // code goes here.
 		    	while(true) {
 		    		try {
+		    			nodesLock.lock();
 		    			heartBeat();
+		    			nodesLock.unlock();
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -341,8 +345,9 @@ public class AgentCenter implements IAgentCenter {
 				agents.remove(a);
 			}
 		}
-		
+		nodesLock.lock();
 		nodes.remove(n);
+		nodesLock.unlock();
 		System.out.print("Finished deleting node : " + n.getAlias());
 	}
 	
@@ -436,22 +441,24 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public void heartBeat() {
+		if(node == null)
+		{
+			return;
+		}
 		Client client = ClientBuilder.newClient();
 		ResteasyClient restClient = new ResteasyClientBuilder().build();
 		for(Node iteratedNode : nodes) {
-			if(!iteratedNode.getAlias().equals(node.getAlias())) {
-				String url = "http://" + iteratedNode.getAddress() + "/AgentiWAR/api/center/node";
-				ResteasyWebTarget target = restClient.target(url);
-				Response response = target.request(MediaType.APPLICATION_JSON).get();
+			String url = "http://" + iteratedNode.getAddress() + "/AgentiWAR/api/center/node";
+			ResteasyWebTarget target = restClient.target(url);
+			Response response = target.request(MediaType.APPLICATION_JSON).get();
+			if(response.getStatus()== 500) {
+				System.out.println("GOT 500 First time for " + iteratedNode.getAlias());
+				response = target.request(MediaType.APPLICATION_JSON).get();
 				if(response.getStatus()== 500) {
-					System.out.println("GOT 500 First time for " + iteratedNode.getAlias());
-					response = target.request(MediaType.APPLICATION_JSON).get();
-					if(response.getStatus()== 500) {
-						System.out.println("GOT 500 Second time for " + iteratedNode.getAlias());
-						url = "http://" + masterNode.getAddress() + "/AgentiWAR/api/center/node/" + iteratedNode.getAlias();
-						target = restClient.target(url);
-						response = target.request().delete();
-					}
+					System.out.println("GOT 500 Second time for " + iteratedNode.getAlias());
+					url = "http://" + masterNode.getAddress() + "/AgentiWAR/api/center/node/" + iteratedNode.getAlias();
+					target = restClient.target(url);
+					response = target.request().delete();
 				} 
 			}
 		}

@@ -189,7 +189,10 @@ public class NodeController {
 	@GET
 	@Path("/node")
 	public Response checkHealth() {
-		if(agentCenter.getNode() != null && agentCenter.getNode().getAlias().equals("slave1")) {
+
+		if(agentCenter != null 
+		&& agentCenter.getNode() != null 
+		&& agentCenter.getNode().getAlias().equals("slave1")) {
 			String exNodeAlias = agentCenter.getNode().getAlias();
 			Random r = new Random();
 			if(r.nextInt(4)%3==0) {
