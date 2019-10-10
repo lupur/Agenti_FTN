@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Remote;
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -21,7 +22,7 @@ import agent.AID;
 import agentCenter.IAgentCenter;
 import jms.JMSQueue;
 
-@Stateless
+@Stateful
 @Remote(IMessageManager.class)
 @LocalBean
 public class MessageManager implements IMessageManager {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -17,7 +18,7 @@ import javax.naming.NotContextException;
 import agent.AgentType;
 import agent.IAgent;
 
-@Stateless
+@Stateful
 @LocalBean
 public class JNDITreeParser {
 
@@ -66,6 +67,7 @@ public class JNDITreeParser {
 		while (agentList.hasMore()) {
 			NameClassPair ncp = agentList.next();
 			String ejbName = ncp.getName();
+			if(ejbName.contains("Agent!agent.IAgent")) continue;
 			if (ejbName.contains("!")) {
 				AgentType agType = parseEjbNameIfValid(parentModule, module, ejbName);
 				if (agType != null) {
