@@ -299,7 +299,9 @@ public class AgentCenter implements IAgentCenter {
 
 	@Override
 	public void setNode(Node node) {
+		nodesLock.lock();
 		this.node = node;
+		nodesLock.unlock();
 	}
 
 	public Node getMasterNode() {
