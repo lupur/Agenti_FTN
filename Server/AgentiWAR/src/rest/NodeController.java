@@ -192,9 +192,10 @@ public class NodeController {
 		if(agentCenter.getNode() != null && agentCenter.getNode().getAlias().equals("slave1")) {
 			String exNodeAlias = agentCenter.getNode().getAlias();
 			Random r = new Random();
-			if(r.nextInt(19)%13==0) {
-//				agentCenter.setNode(null);
+			if(r.nextInt(4)%3==0) {
+				agentCenter.setNode(null);
 				System.out.println("node inactivated: " + exNodeAlias);
+				agentCenter = null;
 			}
 		}
 		try {
