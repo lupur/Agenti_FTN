@@ -18,7 +18,7 @@ import javax.naming.NotContextException;
 import agent.AgentType;
 import agent.IAgent;
 
-@Stateful
+@Stateless
 @LocalBean
 public class JNDITreeParser {
 

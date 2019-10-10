@@ -22,7 +22,7 @@ import agent.AID;
 import agentCenter.IAgentCenter;
 import jms.JMSQueue;
 
-@Stateful
+@Stateless
 @Remote(IMessageManager.class)
 @LocalBean
 public class MessageManager implements IMessageManager {
