@@ -78,13 +78,13 @@ public class AgentInitiator extends Agent {
 		if(participants.isEmpty())
 		{
 			String message = "[" + this.getAid().getStr() +"]: ";
-			message += "\nNo active participants to initiate contract.";
+			message += "No active participants to initiate contract.";
 			System.out.print(message);
 			super.sendLogs(message, agentCenter.getNodes());
 			return;
 		}
 		String message = "[" + this.getAid().getStr() +"]: ";
-		message += "Sending proposal to participants:\n" + participants.toString();
+		message += "Sending proposal to participants:" + participants.toString();
 		System.out.print(message);
 		super.sendLogs(message, agentCenter.getNodes());
 		ACLMessage response = new ACLMessage();
@@ -111,7 +111,7 @@ public class AgentInitiator extends Agent {
 	
 	private void handlePropose(ACLMessage msg)
 	{
-		String message = "[" + this.getAid().getStr() +"]: \n" + 
+		String message = "[" + this.getAid().getStr() +"]: " + 
 						"Received proposal from: " + msg.getSender().getStr();
 		System.out.print(message);
 		super.sendLogs(message, agentCenter.getNodes());
@@ -126,7 +126,7 @@ public class AgentInitiator extends Agent {
 		
 		if(date.getTime() % 3 == 0)
 		{
-			message = "[" + this.getAid().getStr() +"]: \n" +
+			message = "[" + this.getAid().getStr() +"]: " +
 					"Rejecting proposal from: " + msg.getSender().getStr();
 			System.out.print(message);
 			super.sendLogs(message, agentCenter.getNodes());
@@ -161,21 +161,21 @@ public class AgentInitiator extends Agent {
 	
 	private void handleRefuse(ACLMessage msg)
 	{
-		String message = "[" + this.getAid().getStr() +"]: \n" +
+		String message = "[" + this.getAid().getStr() +"]: " +
 					msg.getSender().getStr() + " refused proposal.";
 		super.sendLogs(message, agentCenter.getNodes());
 	}
 	
 	private void handleInform(ACLMessage msg)
 	{
-		String message = "[" + this.getAid().getStr() +"]: \n"+
+		String message = "[" + this.getAid().getStr() +"]: "+
 					"From: " + msg.getSender().getStr() + " received info: "+ msg.getContent();
 		super.sendLogs(message, agentCenter.getNodes());
 	}
 	
 	public void handleFailure(ACLMessage msg)
 	{
-		String message = "[" + this.getAid().getStr() +"]: \n" +
+		String message = "[" + this.getAid().getStr() +"]: " +
 					msg.getSender().getStr() + " failed.";
 		super.sendLogs(message, agentCenter.getNodes());
 	}

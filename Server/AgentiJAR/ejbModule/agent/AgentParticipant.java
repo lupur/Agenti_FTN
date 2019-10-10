@@ -64,7 +64,7 @@ public class AgentParticipant extends Agent {
 	
 	private void handleProposal(ACLMessage msg)
 	{
-		String message = "[" + this.getAid().getStr() +"]: \n" +
+		String message = "[" + this.getAid().getStr() +"]: " +
 					"Call for proposal from: " + msg.getSender().getStr();
 		super.sendLogs(message, agentCenter.getNodes());
 		ACLMessage response = new ACLMessage();
@@ -78,14 +78,14 @@ public class AgentParticipant extends Agent {
 		
 		if(date.getTime() % 3 == 0)
 		{
-			message = "[" + this.getAid().getStr() +"]: \n" +
+			message = "[" + this.getAid().getStr() +"]: " +
 								"Decided not to participate.";
 			
 			response.setPerformative(Performative.REFUSE);
 		}
 		else
 		{
-			message = "[" + this.getAid().getStr() +"]: \n"
+			message = "[" + this.getAid().getStr() +"]: "
 						+ "Decided to participate.";
 			response.setPerformative(Performative.PROPOSE);
 		}
@@ -109,7 +109,7 @@ public class AgentParticipant extends Agent {
 	}
 	
 	private void handleRejectProposal(ACLMessage msg) {
-		String message = "[" + this.getAid().getStr() +"]: \n" +
+		String message = "[" + this.getAid().getStr() +"]: " +
 						"Proposal rejected by " + msg.getSender().getStr();
 		
 		super.sendLogs(message, agentCenter.getNodes());
@@ -117,7 +117,7 @@ public class AgentParticipant extends Agent {
 	
 	private void doWork(ACLMessage msg)
 	{
-		String message = "[" + this.getAid().getStr() +"]: \n" +
+		String message = "[" + this.getAid().getStr() +"]: " +
 						"Doing some work for: " + msg.getSender().getStr();
 		super.sendLogs(message, agentCenter.getNodes());
 		ACLMessage response = new ACLMessage();
@@ -131,7 +131,7 @@ public class AgentParticipant extends Agent {
 		
 		if(date.getTime() % 5 == 0)
 		{
-			message = "[" + this.getAid().getStr() +"]: \n" +
+			message = "[" + this.getAid().getStr() +"]: " +
 							"Failed to finish the job for: " + msg.getSender().getStr();
 			super.sendLogs(message, agentCenter.getNodes());
 			response.setPerformative(Performative.FAILURE);
@@ -140,7 +140,7 @@ public class AgentParticipant extends Agent {
 		else
 		{
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			message = "[" + this.getAid().getStr() +"]: \n" +
+			message = "[" + this.getAid().getStr() +"]: " +
 					"Finished the job for: " + msg.getSender().getStr();
 			super.sendLogs(message, agentCenter.getNodes());
 			response.setPerformative(Performative.INFORM);

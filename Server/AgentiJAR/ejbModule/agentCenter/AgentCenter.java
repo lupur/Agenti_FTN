@@ -107,13 +107,13 @@ public class AgentCenter implements IAgentCenter {
 		        // code goes here.
 		    	while(true) {
 		    		try {
-		    			nodesLock.lock();
 		    			heartBeat();
-		    			nodesLock.unlock();
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+		    			nodesLock.unlock();
+						
 					}
 		    	}	    	
 		    }
@@ -447,9 +447,13 @@ public class AgentCenter implements IAgentCenter {
 		{
 			return;
 		}
+		nodesLock.lock();
+		ArrayList<Node> nodesCopy = new ArrayList<Node>(nodes);
+		nodesLock.unlock();
 		Client client = ClientBuilder.newClient();
 		ResteasyClient restClient = new ResteasyClientBuilder().build();
-		for(Node iteratedNode : nodes) {
+		for(Node iteratedNode : nodesCopy) {
+			if(iteratedNode.getAlias().equals(node.getAlias())) continue;
 			String url = "http://" + iteratedNode.getAddress() + "/AgentiWAR/api/center/node";
 			ResteasyWebTarget target = restClient.target(url);
 			Response response = target.request(MediaType.APPLICATION_JSON).get();
